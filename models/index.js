@@ -16,5 +16,10 @@ db.Sequelize = Sequelize;
 db.sequelize = sequelize;
 
 db.users = require('./user')(sequelize, Sequelize);
+db.ukms = require('./ukm')(sequelize, Sequelize);
+
+db.users.hasMany(db.ukms);
+db.ukms.belongsTo(db.users);
+
 
 module.exports = db;
