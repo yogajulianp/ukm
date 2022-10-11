@@ -9,7 +9,20 @@ var bcrypt = require('bcryptjs');
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("home", { title: "Express" });
+  Products.findAll()
+    .then((data) => {
+      res.render("home", {
+        pageTitle: "Daftar product Saat ini",
+        products: data,
+      });
+    })
+
+    .catch((err) => {
+      res.render("home", {
+        pagetitle: "Daftar product Saat ini",
+        products: [],
+      });
+    });
 });
 
 router.get("/login", function (req, res, next) {
