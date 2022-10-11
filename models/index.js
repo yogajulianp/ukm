@@ -17,9 +17,11 @@ db.sequelize = sequelize;
 
 db.users = require('./user')(sequelize, Sequelize);
 db.ukms = require('./ukm')(sequelize, Sequelize);
+db.roles = require('./role')(sequelize, Sequelize);
 
-db.users.hasMany(db.ukms);
-db.ukms.belongsTo(db.users);
+
+db.users.hasOne(db.ukms);
+db.users.belongsTo(db.roles);
 
 
 module.exports = db;

@@ -18,9 +18,6 @@ module.exports = (sequelize, Sequelize) => {
     lon: {
       type: Sequelize.DOUBLE
     },
-    role: {
-      type: Sequelize.STRING
-    }
   });
 
   return User;
