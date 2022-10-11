@@ -32,14 +32,15 @@ db.ukms.hasMany(db.orders, { foreignKey: "ukm_fk" });
 db.ukms.hasMany(db.products, { foreignKey: "ukm_fk" });
 db.ukms.belongsTo(db.users);
 
+db.order_detail.belongsTo(db.products, { foreignKey: "products_fk" });
+
 db.products.hasMany(db.order_detail, { foreignKey: "products_fk" });
 db.products.hasMany(db.reviews, {
   as: "reviews",
 });
 
 db.orders.hasMany(db.order_detail, { foreignKey: "orders_fk" });
-db.users.hasOne(db.orders, {
-  through: db.order_detail,
+db.users.hasMany(db.orders, {
   foreignKey: "user_fk",
 });
 
