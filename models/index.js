@@ -3,7 +3,7 @@ require("dotenv").config();
 
 const { DB_HOST, DB_PORT, DB_USERNAME, DB_PASSWORD } = process.env;
 
-let sequelize = new Sequelize({
+let sequelize = new Sequelize("UKMdb", null, null, {
   host: DB_HOST,
   port: DB_PORT,
   username: DB_USERNAME,
@@ -11,23 +11,10 @@ let sequelize = new Sequelize({
   dialect: "mssql",
 });
 
-// const BaseModel = {
-//   id: {
-//     type: Sequelize.UUID,
-//     defaultValue: Sequelize.UUIDV4,
-//     allowNull: false,
-//     primaryKey: true,
-//   },
-//   DeleteAt: {
-//     type: "TIMESTAMP",
-//     defaultValue: null,
-//     allowNull: true,
-//   },
-// };
+const db = {};
+db.Sequelize = Sequelize;
+db.sequelize = sequelize;
 
-const Model = {
-  Sequelize,
-  sequelize,
-};
+db.users = require('./user')(sequelize, Sequelize);
 
-module.exports = Model;
+module.exports = db;
