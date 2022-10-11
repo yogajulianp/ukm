@@ -23,7 +23,7 @@ db.products = require("./products")(sequelize, Sequelize);
 db.reviews = require("./reviews")(sequelize, Sequelize);
 db.roles = require("./role")(sequelize, Sequelize);
 
-db.users.hasMany(db.orders, { foreignKey: "user_fk" });
+db.users.hasMany(db.order_detail, { foreignKey: "user_fk" });
 db.users.hasOne(db.ukms);
 db.users.belongsTo(db.roles);
 db.users.hasMany(db.ukms);
@@ -39,7 +39,10 @@ db.products.hasMany(db.reviews, {
 });
 
 db.orders.hasMany(db.order_detail, { foreignKey: "orders_fk" });
-db.order_detail.hasMany(db.orders, { foreignKey: "order_detail_fk" });
+db.users.hasOne(db.orders, {
+  through: db.order_detail,
+  foreignKey: "user_fk",
+});
 
 db.reviews.belongsTo(db.products, {
   foreignKey: "id_product",
