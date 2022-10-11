@@ -26,7 +26,6 @@ db.roles = require("./role")(sequelize, Sequelize);
 db.users.hasMany(db.order_detail, { foreignKey: "user_fk" });
 db.users.hasOne(db.ukms);
 db.users.belongsTo(db.roles);
-db.users.hasMany(db.ukms);
 db.users.hasMany(db.reviews, { foreignKey: "id_user" });
 
 db.ukms.hasMany(db.orders, { foreignKey: "ukm_fk" });
