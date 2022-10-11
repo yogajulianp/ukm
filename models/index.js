@@ -17,21 +17,11 @@ db.sequelize = sequelize;
 
 db.users = require('./user')(sequelize, Sequelize);
 db.ukms = require('./ukm')(sequelize, Sequelize);
-db.products = require("./products")(sequelize, Sequelize);
-db.reviews = require("./reviews")(sequelize, Sequelize);
+db.roles = require('./role')(sequelize, Sequelize);
 
-db.users.hasMany(db.ukms);
-db.ukms.belongsTo(db.users);
 
-db.products.hasMany(db.reviews, { 
-  as: "reviews" 
-});
-
-db.reviews.belongsTo(db.products, { 
-  foreignKey: "id_product", 
-  allowNull: false 
-});
-
+db.users.hasOne(db.ukms);
+db.users.belongsTo(db.roles);
 
 
 module.exports = db;
