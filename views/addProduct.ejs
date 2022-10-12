@@ -1,115 +1,48 @@
 <%- include('templates/header')-%>
-<div class="container text-center">
-  <div class="row">
-    <div class="col-sm-4 col-sm-offset-4">
-      <div class="carousel-inner">
-        <div class="item active">
-          <div class="col-sm-6">
-            <h1><span><%= pageTitle %></span></h1>
-          </div>
-        </div>
+  <section id="cart_items">
+    <div class="container">
+      <div class="breadcrumbs">
+        <ol class="breadcrumb">
+          <li><a href="products">Products</a></li>
+          <li class="active">Add Product</li>
+        </ol>
       </div>
-      <br />
-    </div>
-  </div>
-  
-  
-</div>
+      <!--/breadcrums-->
 
-<div class="container">
-
-  <div class="row">
-      <div class="col-sm-4 col-sm-offset-4">
-
-      
-        <div class="container">
-          <div class="row">
-            <div class="col-sm-3">
-              <div class="left-sidebar">
-                <div>
-                  <% if (errorMessage) { %>
-                  <div class="alert alert-danger" role="alert"><%= errorMessage %></div>
-                  <% } %>
-                  <form
-                    method="POST"
-                    action="/products/add"
-                    enctype="multipart/form-data"
-                  >
-                    <div class="mb-3">
-                      <label for="title" class="form-label">Judul Product</label>
-                      <input
-                        type="text"
-                        class="form-control"
-                        name="name"
-                        id="name"
-                        placeholder="Judul Product"
-                        value="<% if ( hasError) { %><%= products.name %><% } %>"
-                      />
-                    </div>
-        
-                    <div class="mb-3">
-                      <label for="image" class="form-label">Gambar</label>
-                      <div class="input-group mb-3">
-                        <input
-                          type="file"
-                          accept="image/png, image/jpeg, image/jpg"
-                          class="form-control"
-                          name="image"
-                          id="image"
-                        />
-                      </div>
-                    </div>
-                    <div class="mb-3">
-                      <label for="berita" class="form-label">Deskripsi</label>
-                      <textarea
-                        class="form-control"
-                        name="description"
-                        id="description"
-                        rows="9"
-                      >
-        <% if (hasError) { %><%= products.description %><% } %></textarea
-                      >
-                    </div>
-                    <div class="mb-3">
-                      <label for="title" class="form-label">Jumlah Stok</label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        name="quantity"
-                        id="quantity"
-                        placeholder="Jumlah Stok Product"
-                        value="<% if ( hasError) { %><%= products.quantity %><% } %>"
-                      />
-                    </div>
-                    <div class="mb-3">
-                      <label for="title" class="form-label">Harga</label>
-                      <input
-                        type="number"
-                        class="form-control"
-                        name="price"
-                        id="price"
-                        placeholder="Harga Product"
-                        value="<% if ( hasError) { %><%= products.price %><% } %>"
-                      />
-                    </div>
-        
+      <div class="shopper-informations">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="shopper-info">
+              <p>Tambah Produk</p>
+              <% if (errorMessage) { %>
+                <div class="alert alert-danger" role="alert">
+                  <%= errorMessage %>
+                </div>
+                <% } %>
+                  <form method="POST" action="/products/add" enctype="multipart/form-data">
+                    <input type="text" name="name" id="name" placeholder="Judul Product"
+                      value="<% if ( hasError) { %><%= products.name %><% } %>" />
+                    <input type="file" accept="image/png, image/jpeg, image/jpg" name="image" id="image" />
+                    <input type="number" name="quantity" id="quantity" placeholder="Jumlah Stok Product"
+                      value="<% if ( hasError) { %><%= products.quantity %><% } %>" />
+                    <input type="number" name="price" id="price" placeholder="Harga Product"
+                      value="<% if ( hasError) { %><%= products.price %><% } %>" />
+                    <textarea name="description" id="description" rows="5"
+                      placeholder="Deskripsi Produk"><% if (hasError) { %><%= products.description %><% } %></textarea>
                     <button type="submit" class="btn btn-primary">
                       Tambah Product
                     </button>
                     &nbsp;
-                    <a href="/products" class="btn btn-primary">Cancel </a>
-                    
+                    <a href="/products" class="btn btn-primary">Cancel</a>
                   </form>
-                </div>
-              </div>
             </div>
           </div>
         </div>
-
       </div>
     </div>
-  </div>
+  </section>
+  <br>
 
 
 
-<%- include('templates/footer') -%>
+  <%- include('templates/footer') -%>
