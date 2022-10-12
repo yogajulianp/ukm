@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-const db = require("../models");
+const db = require("../models/index");
 const Products = db.products
 const Reviews = db.reviews
 const Op = db.Sequelize.Op;
