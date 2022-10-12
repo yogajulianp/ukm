@@ -15,6 +15,7 @@ router.get("/", function (req, res, next) {
       res.render("home", {
         pageTitle: "Daftar product Saat ini",
         products: data,
+        session: req.session
       });
     })
 
@@ -31,7 +32,7 @@ router.get("/detail/:id", async function (req, res, next) {
   const id = parseInt(req.params.id);
 
   const isiReviews = await Reviews.findAll({
-    where : {
+    where: {
       id_product: id
     }
   });
@@ -41,7 +42,8 @@ router.get("/detail/:id", async function (req, res, next) {
         res.render("productDetail", {
           pagetitle: "product Saat ini",
           products: datadetail,
-          reviews : isiReviews
+          reviews: isiReviews,
+          session: req.session
         });
       } else {
         // http 404 not found
@@ -61,12 +63,13 @@ router.get("/detail/:id", async function (req, res, next) {
 
 //add Komentar
 router.post("/addreviews", function (req, res, next) {
-  
+
   let reviews = {
-    id_product : req.body.id_product,
+    id_product: req.body.id_product,
     //id_user : req.body.id_user,
     score: req.body.score,
-    comment: req.body.comment
+    comment: req.body.comment,
+
   };
   Reviews.create(reviews)
     .then((addData) => {
@@ -90,6 +93,7 @@ router.get("/add", function (req, res, next) {
     editing: false,
     hasError: false,
     errorMessage: null,
+    session: req.session
   });
 });
 
@@ -101,21 +105,21 @@ router.post("/add", function (req, res, next) {
     description: req.body.description,
     quantity: req.body.quantity,
     price: req.body.price,
-    rating : null
+    rating: null
   };
-  
+
   if (!products.image) {
     return res.status(422).render("addProducts", {
       pageTitle: 'Tambah product',
       //path: 'products/add',
       editing: false,
       hasError: true,
-      products : {
+      products: {
         name: req.body.name,
         description: req.body.description,
         quantity: req.body.quantity,
         price: req.body.price,
-        
+
       },
       errorMessage: 'file yang dikirim harus disertai gambar, harus format png/jpeg/jpg',
     });
@@ -149,7 +153,7 @@ router.post("/add", function (req, res, next) {
 // //edit product, data di ambil
 // router.get("/editproducts/:id", function (req, res, next) {
 //   const id = parseInt(req.params.id);
- 
+
 //   Products.findByPk(id)
 //     .then((dataEdit) => {
 //       if (dataEdit) {
@@ -162,7 +166,7 @@ router.post("/add", function (req, res, next) {
 //       } else {
 //         // http 404 not found
 //         res.redirect("/");
-        
+
 //       }
 //     })
 //     .catch((err) => {

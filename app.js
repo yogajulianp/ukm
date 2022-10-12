@@ -4,10 +4,17 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const db = require("./models");
+var session = require('express-session');
 
 // require("dotenv").config();
 
 // const { PORT } = process.env;
+var app = express();
+app.use(
+  session({
+    secret: "12345",
+  })
+);
 
 const multer = require("multer");
 
@@ -17,7 +24,7 @@ const fileStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname +  "-" + uniqueSuffix + "-" + file.originalname );
+    cb(null, file.fieldname + "-" + uniqueSuffix + "-" + file.originalname);
   },
 });
 
@@ -50,8 +57,6 @@ db.sequelize
   .catch((err) => {
     console.log("Error ", err);
   });
-
-var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));

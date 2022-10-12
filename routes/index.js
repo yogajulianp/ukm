@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
+const auth = require('../auth');
 const db = require('../models/index');
 const User = db.users;
 const Role = db.roles;
@@ -15,6 +16,7 @@ router.get("/", function (req, res, next) {
       res.render("home", {
         pageTitle: "Daftar product Saat ini",
         products: data,
+        session: req.session
       });
     })
 
@@ -22,16 +24,28 @@ router.get("/", function (req, res, next) {
       res.render("home", {
         pagetitle: "Daftar product Saat ini",
         products: [],
+
       });
     });
 });
 
 router.get("/login", function (req, res, next) {
-  res.render("login", { title: "Express" });
+  res.render("login", {
+    title: "Express",
+    session: req.session
+  });
 });
 
 router.get("/register", function (req, res, next) {
-  res.render("register", { title: "Express" });
+  res.render("register", {
+    title: "Express",
+    session: req.session
+  });
+});
+
+router.get('/logout', function (req, res, next) {
+  req.session.destroy();
+  res.redirect('/login');
 });
 
 router.get("/addrole", function (req, res, next) {
@@ -62,8 +76,7 @@ router.post('/register', function (req, res, next) {
     username: req.body.username,
     password: hashpass,
     lat: req.body.lat,
-    lon: req.body.lon,
-    roleId: 3
+    lon: req.body.lon
   }
   User.create(user)
     .then(data => {
@@ -89,8 +102,8 @@ router.post('/login', function (req, res, next) {
       if (data) {
         var loginValid = bcrypt.compareSync(req.body.password, data.password);
         if (loginValid) {
-          // req.session.islogin = true;
-          // req.session.username = req.body.username;
+          req.session.islogin = true;
+          req.session.username = req.body.username;
           res.redirect('/');
         } else {
           res.redirect('/login');
