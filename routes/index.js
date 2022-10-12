@@ -1,7 +1,7 @@
 var express = require("express");
 var router = express.Router();
 
-const db = require('../models');
+const db = require('../models/index');
 const User = db.users;
 const Role = db.roles;
 const Products = db.products;
