@@ -6,15 +6,11 @@ module.exports = (sequelize, Sequelize) => {
       type: DataTypes.INTEGER,
       allowNull: false,
     },
-    delivery_price: {
-      type: DataTypes.FLOAT,
-      allowNull: false,
-    },
     total_price: {
       type: DataTypes.FLOAT,
       allowNull: false,
     },
-    deleteAt: {
+    delete_at: {
       type: "DATETIMEOFFSET",
       allowNull: true,
     },

@@ -1,0 +1,110 @@
+
+<%- include('templates/header')-%>
+<h1><%=products.name%></h1>
+<br>
+
+<div class="grid text-center">
+  <div class="card mb-3" >
+    <div class="card-body">
+      <h5 class="card-title"><%=products.name%></h5>
+      <div >
+        <img class="img-fluid " src="/<%= products.image %>" alt="<%=products.title %>" >
+
+      </div>
+      
+      <p class="card-text"><small class="text-muted">Fast Shipping </small></p>
+    </div>
+  </div>
+</div>
+<div class="container" style="background-color: #9cb1bd;">
+  <h5>Deskripsi</h5>
+  <p class="bg-white"><%=products.description%></p>
+</div>
+ 
+
+<div>
+  <a href="/" class="btn btn-primary">Kembali </a>
+  &nbsp;
+  <a href="/products/edit/<%=products.id %>"" class="btn btn-secondary">Edit</a>
+  &nbsp;
+  <a href="/products/delete/<%=products.id %>" class="btn btn-danger">Delete</a>
+</div>
+&nbsp;
+&nbsp;
+&nbsp;
+
+<div class="container" style="background-color: #9cb1bd;">
+  <h1>Ulasan Produk</h1>
+  <form method="POST" action="/addreviews">
+    <div class="mb-3">
+      <input type="hidden" name="id_product" id="id_product" value="<%= products.id %>">
+        <label for="nama" class="form-label">Skor</label>
+        <input type="number" class="form-control" name="score" id="score"  placeholder="nilai ulasan 1-5">
+      </div>
+    <div class="mb-3">
+      <label for="comment" class="form-label">Isi komentar</label>
+      <input type="text" class="form-control" name="comment" required id="comment"  placeholder="isi komentar">
+    </div>
+    <button  type="submit" class="btn btn-primary">Tambah Ulasan</button>
+    &nbsp;
+    &nbsp;
+  </form>
+</div>
+
+
+<!-- 
+ referensi https://mdbootstrap.com/docs/standard/extended/comments/#example2
+--> 
+
+<section style="background-color: #ad655f;">
+
+  <div class="container my-5 py-5">
+    <div class="row d-flex justify-content-center">
+      <div class="col-md-12 col-lg-10">
+        <div class="card text-dark">
+
+          <div class="card-body p-4">
+            <h4 class="mb-0">Ulasan Produk</h4>
+            <p class="fw-light mb-4 pb-2">oleh customer</p>
+          </div>
+
+          <hr class="my-0" />
+          <%reviews.forEach(function(element) {%>
+          <div class="card-body p-4">
+            <div class="d-flex flex-start">
+              <img class="rounded-circle shadow-1-strong me-3"
+                src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(33).webp" 
+                alt="avatar" 
+                width="60"
+                height="60" />
+              <div>
+                <h6 class="fw-bold mb-1">Username Customer</h6>
+                <div class="d-flex align-items-center mb-3">
+                  <p class="mb-0">
+                    <%= element.createdAt.toString().substring(0, 24) %>
+                    <span class="badge bg-success">gold Akun</span>
+                  </p>
+                  <a href="#!" class="link-muted"><i class="fas fa-pencil-alt ms-2"></i></a>
+                  <a href="#!" class="text-success"><i class="fas fa-redo-alt ms-2"></i></a>
+                  <a href="#!" class="link-danger"><i class="fas fa-heart ms-2"></i></a>
+                </div>
+                <p class="mb-0">
+                  <%=element.comment%>
+                </p>
+              </div>
+            </div>
+          </div>
+          <%} );%>
+
+         
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+
+
+<%- include('templates/footer') -%>
+

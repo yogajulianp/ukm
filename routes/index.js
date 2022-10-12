@@ -1,15 +1,29 @@
 var express = require("express");
 var router = express.Router();
 
-const db = require('../models');
+const db = require('../models/index');
 const User = db.users;
 const Role = db.roles;
+const Products = db.products;
 
 var bcrypt = require('bcryptjs');
 
 /* GET home page. */
 router.get("/", function (req, res, next) {
-  res.render("home", { title: "Express" });
+  Products.findAll()
+    .then((data) => {
+      res.render("home", {
+        pageTitle: "Daftar product Saat ini",
+        products: data,
+      });
+    })
+
+    .catch((err) => {
+      res.render("home", {
+        pagetitle: "Daftar product Saat ini",
+        products: [],
+      });
+    });
 });
 
 router.get("/login", function (req, res, next) {

@@ -1,0 +1,48 @@
+<%- include('templates/header')-%>
+  <section id="cart_items">
+    <div class="container">
+      <div class="breadcrumbs">
+        <ol class="breadcrumb">
+          <li><a href="products">Products</a></li>
+          <li class="active">Add Product</li>
+        </ol>
+      </div>
+      <!--/breadcrums-->
+
+      <div class="shopper-informations">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="shopper-info">
+              <p>Tambah Produk</p>
+              <% if (errorMessage) { %>
+                <div class="alert alert-danger" role="alert">
+                  <%= errorMessage %>
+                </div>
+                <% } %>
+                  <form method="POST" action="/products/add" enctype="multipart/form-data">
+                    <input type="text" name="name" id="name" placeholder="Judul Product"
+                      value="<% if ( hasError) { %><%= products.name %><% } %>" />
+                    <input type="file" accept="image/png, image/jpeg, image/jpg" name="image" id="image" />
+                    <input type="number" name="quantity" id="quantity" placeholder="Jumlah Stok Product"
+                      value="<% if ( hasError) { %><%= products.quantity %><% } %>" />
+                    <input type="number" name="price" id="price" placeholder="Harga Product"
+                      value="<% if ( hasError) { %><%= products.price %><% } %>" />
+                    <textarea name="description" id="description" rows="5"
+                      placeholder="Deskripsi Produk"><% if (hasError) { %><%= products.description %><% } %></textarea>
+                    <button type="submit" class="btn btn-primary">
+                      Tambah Product
+                    </button>
+                    &nbsp;
+                    <a href="/products" class="btn btn-primary">Cancel</a>
+                  </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <br>
+
+
+
+  <%- include('templates/footer') -%>
