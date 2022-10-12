@@ -40,6 +40,7 @@ const fileFilter = (req, file, cb) => {
 
 const indexRouter = require("./routes/index");
 const productRouter = require("./routes/products");
+const adminRouter = require('./routes/admin');
 
 db.sequelize
   .sync()
@@ -68,6 +69,7 @@ app.use('/images', express.static(path.join(__dirname, 'images')));
 
 app.use("/", indexRouter);
 app.use("/products", productRouter);
+app.use("/admin", adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
