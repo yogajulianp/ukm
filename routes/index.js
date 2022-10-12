@@ -4,6 +4,7 @@ var router = express.Router();
 const db = require('../models');
 const User = db.users;
 const Role = db.roles;
+const Products = db.products;
 
 var bcrypt = require('bcryptjs');
 
