@@ -48,8 +48,7 @@ router.post('/register', function (req, res, next) {
     username: req.body.username,
     password: hashpass,
     lat: req.body.lat,
-    lon: req.body.lon,
-    roleId: 3
+    lon: req.body.lon
   }
   User.create(user)
     .then(data => {
