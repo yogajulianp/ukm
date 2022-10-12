@@ -22,6 +22,7 @@ db.ukms = require("./ukm")(sequelize, Sequelize);
 db.products = require("./products")(sequelize, Sequelize);
 db.reviews = require("./reviews")(sequelize, Sequelize);
 db.roles = require("./role")(sequelize, Sequelize);
+db.transaction = require("./transaction")(sequelize, Sequelize);
 
 db.users.hasMany(db.order_detail, { foreignKey: "user_fk" });
 db.users.hasOne(db.ukms);
@@ -48,5 +49,7 @@ db.reviews.belongsTo(db.products, {
   foreignKey: "id_product",
   allowNull: false,
 });
+
+db.transaction.hasMany(db.orders, { foreignKey: "transaction_fk" });
 
 module.exports = db;
