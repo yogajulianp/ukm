@@ -6,7 +6,9 @@
   <td class="cart_total"></td>
   <td class="cart_delete">
     <form action="/cart" method="post">
+      <%if (data.length != 0) {%>
       <input type="submit" class="btn btn-primary" />
+      <%}%>
     </form>
   </td>
 </tr>

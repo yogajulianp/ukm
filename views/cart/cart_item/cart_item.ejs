@@ -1,13 +1,13 @@
 <tr>
   <td class="cart_product">
-    <a href=""><img src="images/cart/one.png" alt="" /></a>
+    <a href=""><img src="<%=data['product.image'] %>" alt="" /></a>
   </td>
   <td class="cart_description">
     <h4><a href=""><%=data["product.name"] %> </a></h4>
     <p>Data ID: <%=data["product.id"] %></p>
   </td>
   <td class="cart_price">
-    <p>Rp. <%=data["product.price"] %></p>
+    <p><%=data["product.price"] %></p>
   </td>
   <td class="cart_quantity">
     <div class="cart_quantity_button">
@@ -34,9 +34,7 @@
     </div>
   </td>
   <td class="cart_total">
-    <p class="cart_total_price">
-      RP. <%=data["product.price"]*data.quantity %>
-    </p>
+    <p class="cart_total_price"><%=data["product.price_total"] %></p>
   </td>
   <td class="cart_delete">
     <a class="cart_quantity_delete" href="/cart/delete/<%=data.id%> "
