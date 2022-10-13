@@ -2,8 +2,9 @@ var express = require("express");
 var router = express.Router();
 
 const db = require("../models/index");
-const Products = db.products
-const Reviews = db.reviews
+const Products = db.products;
+const Reviews = db.reviews;
+const Category = db.category;
 const Op = db.Sequelize.Op;
 
 
@@ -87,14 +88,20 @@ router.post("/addreviews", function (req, res, next) {
 
 //add product
 router.get("/add", function (req, res, next) {
-  res.render("addProduct", {
-    pageTitle: 'Tambah product',
-    //path: 'products/add',
-    editing: false,
-    hasError: false,
-    errorMessage: null,
-    session: req.session
-  });
+  Category.findAll({attributes: ['id', 'category']})
+  .then((categories) => {
+    console.log(categories)
+    res.render("addProduct", {
+      pageTitle: 'Tambah product',
+      //path: 'products/add',
+      editing: false,
+      hasError: false,
+      errorMessage: null,
+      session: req.session,
+      categories
+    });
+  })
+ 
 });
 
 //add product
@@ -105,7 +112,8 @@ router.post("/add", function (req, res, next) {
     description: req.body.description,
     quantity: req.body.quantity,
     price: req.body.price,
-    rating: null
+    rating: null,
+    category_fk: req.body.category_fk
   };
 
   if (!products.image) {
