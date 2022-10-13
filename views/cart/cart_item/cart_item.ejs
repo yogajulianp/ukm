@@ -1,0 +1,46 @@
+<tr>
+  <td class="cart_product">
+    <a href=""><img src="images/cart/one.png" alt="" /></a>
+  </td>
+  <td class="cart_description">
+    <h4><a href=""><%=data["product.name"] %> </a></h4>
+    <p>Data ID: <%=data["product.id"] %></p>
+  </td>
+  <td class="cart_price">
+    <p>Rp. <%=data["product.price"] %></p>
+  </td>
+  <td class="cart_quantity">
+    <div class="cart_quantity_button">
+      <a
+        class="cart_quantity_up"
+        href="/cart/update/?id= <%= data.id %>&quantity= <%=data.quantity %>&isadd=1"
+      >
+        +
+      </a>
+      <input
+        class="cart_quantity_input"
+        type="text"
+        name="quantity"
+        value="<%=data.quantity %>"
+        autocomplete="off"
+        size="2"
+      />
+      <a
+        class="cart_quantity_down"
+        href="/cart/update/?id= <%= data.id %>&quantity= <%=data.quantity %>&isadd=0"
+      >
+        -
+      </a>
+    </div>
+  </td>
+  <td class="cart_total">
+    <p class="cart_total_price">
+      RP. <%=data["product.price"]*data.quantity %>
+    </p>
+  </td>
+  <td class="cart_delete">
+    <a class="cart_quantity_delete" href="/cart/delete/<%=data.id%> "
+      ><i class="fa fa-times"></i
+    ></a>
+  </td>
+</tr>

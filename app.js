@@ -17,7 +17,7 @@ const fileStorage = multer.diskStorage({
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, file.fieldname +  "-" + uniqueSuffix + "-" + file.originalname );
+    cb(null, file.fieldname + "-" + uniqueSuffix + "-" + file.originalname);
   },
 });
 
@@ -40,6 +40,8 @@ const fileFilter = (req, file, cb) => {
 
 const indexRouter = require("./routes/index");
 const productRouter = require("./routes/products");
+const cartRouter = require("./routes/cart");
+const checkoutRouter = require("./routes/checkout");
 
 db.sequelize
   .sync()
@@ -64,10 +66,12 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
 app.use(express.static(path.join(__dirname, "public")));
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/", indexRouter);
 app.use("/products", productRouter);
+app.use("/cart", cartRouter);
+app.use("/checkout", checkoutRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
