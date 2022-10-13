@@ -28,8 +28,6 @@ router.get("/", async function (req, res, next) {
       res.render("home", {
         pagetitle: "Daftar product Saat ini",
         products: [],
-<<<<<<< Updated upstream
-=======
       });
     });
 });
@@ -47,7 +45,6 @@ router.get("/", function (req, res, next) {
       res.render("templates/sidebar", {
       
         categories: [],
->>>>>>> Stashed changes
       });
     });
 });
