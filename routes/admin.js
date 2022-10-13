@@ -1,18 +1,69 @@
+const { text } = require("express");
 var express = require("express");
+const session = require("express-session");
 var router = express.Router();
 
 
 const auth = require('../auth');
 const db = require("../models/index");
+const user = require("../models/user");
 const User = db.users;
 const Ukm = db.ukms;
 const Role = db.roles;
 const Products = db.products;
 const Categories = db.category;
 
-router.get("/", auth, function (req, res, next) {
-    res.render("admin/dashboard");
+var bcrypt = require('bcryptjs');
 
+router.get("/", auth, function (req, res, next) {
+    const requsername = req.session.username;
+    User.findOne({ where: { username: requsername } })
+        .then(data => {
+            var cekukmId = data.ukmId;
+            if (cekukmId == null) {
+                res.redirect("/admin/regisukm")
+            } else {
+                res.render("admin/dashboard")
+            }
+        })
+});
+
+router.get('/regisukm', function (req, res, next) {
+    res.render("admin/regisukm")
+});
+
+router.post("/regisukm", function (req, res, next) {
+    const requsername = req.session.username;
+    User.findOne({ where: { username: requsername } })
+        .then(data => {
+            if (data) {
+                var userId = data.id
+                var ukm = {
+                    name: req.body.name,
+                    description: req.body.description,
+                    address: req.body.address,
+                    userId: userId
+                }
+                Ukm.create(ukm)
+                    .then(dataukm => {
+                        if (dataukm) {
+                            User.update({
+                                ukmId: dataukm.id,
+                                roleId: 2
+                            }, {
+                                where: { id: userId }
+                            })
+                            res.redirect("/admin");
+                        }
+                    })
+                    .catch((err) => {
+                        res.json({
+                            info: "Error",
+                            message: err.message,
+                        });
+                    });
+            }
+        })
 });
 
 router.get("/products", function (req, res, next) {
@@ -132,16 +183,19 @@ router.post("/login", function (req, res, next) {
                 if (loginValid) {
                     req.session.islogin = true;
                     req.session.username = req.body.username;
-                    res.redirect('/');
+                    res.redirect('/admin');
                 } else {
-                    res.redirect('/login');
+                    res.redirect('/admin/login');
                 }
             } else {
                 res.redirect('/login');
             }
         })
         .catch(err => {
-            res.redirect('/login');
+            res.json({
+                info: "Error",
+                message: err.message
+            });
         });
 });
 
