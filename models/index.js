@@ -43,6 +43,7 @@ db.products.hasMany(db.reviews, {
 
 db.category.hasMany(db.products, { foreignKey: "category_fk" })
 
+
 db.orders.hasMany(db.order_detail, { foreignKey: "orders_fk" });
 db.users.hasMany(db.orders, {
   foreignKey: "user_fk",
@@ -50,6 +51,11 @@ db.users.hasMany(db.orders, {
 
 db.reviews.belongsTo(db.products, {
   foreignKey: "id_product",
+  allowNull: false,
+});
+
+db.products.belongsTo(db.category, {
+  foreignKey: "category_fk",
   allowNull: false,
 });
 

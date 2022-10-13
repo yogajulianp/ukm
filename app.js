@@ -4,7 +4,7 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const db = require("./models");
-var session = require('express-session');
+var session = require("express-session");
 
 // require("dotenv").config();
 
@@ -47,7 +47,9 @@ const fileFilter = (req, file, cb) => {
 
 const indexRouter = require("./routes/index");
 const productRouter = require("./routes/products");
-const adminRouter = require('./routes/admin');
+const cartRouter = require("./routes/cart");
+const checkoutRouter = require("./routes/checkout");
+const adminRouter = require("./routes/admin");
 
 db.sequelize
   .sync()
@@ -70,10 +72,12 @@ app.use(
   multer({ storage: fileStorage, fileFilter: fileFilter }).single("image")
 );
 app.use(express.static(path.join(__dirname, "public")));
-app.use('/images', express.static(path.join(__dirname, 'images')));
+app.use("/images", express.static(path.join(__dirname, "images")));
 
 app.use("/", indexRouter);
 app.use("/products", productRouter);
+app.use("/cart", cartRouter);
+app.use("/checkout", checkoutRouter);
 app.use("/admin", adminRouter);
 
 // catch 404 and forward to error handler
