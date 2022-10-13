@@ -1,18 +1,69 @@
+const { text } = require("express");
 var express = require("express");
+const session = require("express-session");
 var router = express.Router();
 var bcrypt = require("bcryptjs");
 
 const auth = require("../auth");
 const db = require("../models/index");
-const { ukms } = require("../models/index");
+const user = require("../models/user");
 const User = db.users;
 const Ukm = db.ukms;
 const Role = db.roles;
 const Products = db.products;
 const Categories = db.category;
 
+var bcrypt = require('bcryptjs');
+
 router.get("/", auth, function (req, res, next) {
-  res.render("admin/dashboard");
+  const requsername = req.session.username;
+  User.findOne({ where: { username: requsername } })
+    .then(data => {
+      var cekukmId = data.ukmId;
+      if (cekukmId == null) {
+        res.redirect("/admin/regisukm")
+      } else {
+        res.render("admin/dashboard")
+      }
+    })
+});
+
+router.get('/regisukm', function (req, res, next) {
+  res.render("admin/regisukm")
+});
+
+router.post("/regisukm", function (req, res, next) {
+  const requsername = req.session.username;
+  User.findOne({ where: { username: requsername } })
+    .then(data => {
+      if (data) {
+        var userId = data.id
+        var ukm = {
+          name: req.body.name,
+          description: req.body.description,
+          address: req.body.address,
+          userId: userId
+        }
+        Ukm.create(ukm)
+          .then(dataukm => {
+            if (dataukm) {
+              User.update({
+                ukmId: dataukm.id,
+                roleId: 2
+              }, {
+                where: { id: userId }
+              })
+              res.redirect("/admin");
+            }
+          })
+          .catch((err) => {
+            res.json({
+              info: "Error",
+              message: err.message,
+            });
+          });
+      }
+    })
 });
 
 // UKM Page
@@ -271,53 +322,30 @@ router.get("/login", function (req, res, next) {
 
 router.post("/login", function (req, res, next) {
   if (!req.body.username) {
-    return res.redirect("login");
+    return res.redirect("/login");
   } else if (!req.body.password) {
-    return res.redirect("login");
+    return res.redirect("/login");
   }
   User.findOne({ where: { username: req.body.username } })
-    .then((data) => {
+    .then(data => {
       if (data) {
         var loginValid = bcrypt.compareSync(req.body.password, data.password);
         if (loginValid) {
           req.session.islogin = true;
           req.session.username = req.body.username;
           req.session.userId = data.id;
-          res.redirect("ukm");
+          res.redirect('/admin');
         } else {
-          res.redirect("login");
+          res.redirect('/admin/login');
         }
       } else {
-        res.redirect("login");
+        res.redirect('/login');
       }
     })
-    .catch((err) => {
-      res.redirect("login");
-    });
-});
-
-router.get("/register", function (req, res, next) {
-  res.render("admin/register");
-});
-
-router.post("/register", function (req, res, next) {
-  var hashpass = bcrypt.hashSync(req.body.password, 8);
-  var user = {
-    name: req.body.name,
-    email: req.body.email,
-    username: req.body.username,
-    password: hashpass,
-    lat: req.body.lat,
-    lon: req.body.lon,
-    roleId: 2,
-  };
-  User.create(user)
-    .then((data) => {
-      res.redirect("login");
-    })
-    .catch((err) => {
-      res.render("register", {
-        title: "Form Register",
+    .catch(err => {
+      res.json({
+        info: "Error",
+        message: err.message
       });
     });
 });
