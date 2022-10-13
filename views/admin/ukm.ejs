@@ -1,0 +1,29 @@
+<%- include('templates/admin_header') %>
+    <%- include('templates/admin_sidebar') %>
+        <!-- Begin Page Content -->
+        <div class="container-fluid">
+
+            <!-- Page Heading -->
+            <h1 class="h3 mb-2 text-gray-800">
+                <%= pageTitle %>
+            </h1>
+            <p class="mb-4">
+
+                <%if(data==0) { %>
+                    buat dulu <a href="add_ukm">disini</a>
+                    <% } else { %>
+                        <p>Nama UKM = <%= data.name %>.</p>
+                        <p>Deskripsi = <%= data.description %>.</p>
+                        <p>Alamat = <%= data.address %>.</p>
+                        <% } %>
+            </p>
+
+
+
+        </div>
+        <!-- /.container-fluid -->
+
+        </div>
+        <!-- End of Main Content -->
+
+        <%- include('templates/admin_footer') %>

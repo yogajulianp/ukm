@@ -4,14 +4,13 @@
         <div class="container-fluid">
 
             <!-- Page Heading -->
-            <h1 class="h3 mb-2 text-gray-800">Daftar Produk</h1>
-            <p class="mb-4">Berikut adalah daftar produk UKM Anda.</p>
+            <h1 class="h3 mb-2 text-gray-800">Daftar User</h1>
 
             <!-- DataTales Example -->
             <div class="card shadow mb-4">
                 <div class="card-header py-3">
-                    <h6 class="m-0 font-weight-bold text-primary">
-                        <%= pageTitle %>
+                    <h6 class="m-0 font-weight-bold text-warning">
+                        Tabel User
                     </h6>
                 </div>
                 <div class="card-body">
@@ -20,45 +19,38 @@
                             <thead>
                                 <tr>
                                     <th>No</th>
-                                    <th>Nama Produk</th>
-                                    <th>Foto</th>
-                                    <th>Deskripsi</th>
-                                    <th>Stok</th>
-                                    <th>Harga</th>
+                                    <th>Nama User</th>
+                                    <th>Email</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <%products.forEach(function(item) {%>
+                                <% $i=1; users.forEach(function(item) {%>
                                     <tr>
-                                        <td>1.</td>
+                                        <td>
+                                            <%= $i++ %>
+                                        </td>
                                         <td>
                                             <%= item.name %>
                                         </td>
-                                        <td><img src="/<%= item.image %>" width="250px" alt="s"></td>
                                         <td>
-                                            <%= item.description %>
+                                            <%= item.email %>
                                         </td>
                                         <td>
-                                            <%= item.quantity %>
-                                        </td>
-                                        <td>
-                                            Rp.<%= item.price %>
-                                        </td>
-                                        <td>
-                                            <a href="edit_products" class="btn btn-primary"><i
-                                                    class="fas fa-edit fa-sm fa-fw"></i></a>
-                                            <a href="delete_products?id=<%= item.id %>" class="btn btn-danger"><i
+                                            <a href="" class="btn btn-danger"><i
+                                                    class="fas fa-times fa-sm fa-fw"></i></a>
+                                            <a href="" class="btn btn-danger"><i
                                                     class="fas fa-trash fa-sm fa-fw"></i></a>
                                         </td>
                                     </tr>
                                     <% }) %>
                             </tbody>
                         </table>
-                        <a href="add_products" class="btn btn-warning">Add Product</a>
                     </div>
                 </div>
             </div>
+
+
 
         </div>
         <!-- /.container-fluid -->
