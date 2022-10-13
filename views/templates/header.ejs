@@ -73,7 +73,9 @@
                     <div class="col-sm-8">
                         <div class="shop-menu pull-right">
                             <ul class="nav navbar-nav">
-                                <li><a href="/admin">Mulai Jualan</a></li>
+                                <% if(session.username) { %>
+                                <li><a href="/admin/login">Mulai Jualan</a></li>
+                                <% } %>
                                 <li><a href="#"><i class="fa fa-user"></i> Account</a></li>
                                 <li><a href="#"><i class="fa fa-star"></i> Wishlist</a></li>
                                 <li><a href="/checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>

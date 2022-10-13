@@ -19,12 +19,10 @@ router.get("/", function (req, res, next) {
         session: req.session
       });
     })
-
     .catch((err) => {
       res.render("home", {
         pagetitle: "Daftar product Saat ini",
         products: [],
-
       });
     });
 });
@@ -91,10 +89,8 @@ router.post('/register', function (req, res, next) {
 
 router.post('/login', function (req, res, next) {
   if (!req.body.username) {
-    req.flash("error", "Please input the username");
     return res.redirect("/login");
   } else if (!req.body.password) {
-    req.flash("error", "Please input the password");
     return res.redirect("/login");
   }
   User.findOne({ where: { username: req.body.username } })

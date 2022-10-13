@@ -27,12 +27,12 @@ db.category = require("./categories")(sequelize, Sequelize);
 
 db.users.hasMany(db.order_detail, { foreignKey: "user_fk" });
 db.users.hasOne(db.ukms);
+db.ukms.hasOne(db.users);
 db.users.belongsTo(db.roles);
 db.users.hasMany(db.reviews, { foreignKey: "id_user" });
 
 db.ukms.hasMany(db.orders, { foreignKey: "ukm_fk" });
 db.ukms.hasMany(db.products, { foreignKey: "ukm_fk" });
-db.ukms.belongsTo(db.users);
 
 db.order_detail.belongsTo(db.products, { foreignKey: "products_fk" });
 
@@ -41,7 +41,7 @@ db.products.hasMany(db.reviews, {
   as: "reviews",
 });
 
-db.category.hasMany(db.products, { foreignKey: "category_fk" } )
+db.category.hasMany(db.products, { foreignKey: "category_fk" })
 
 db.orders.hasMany(db.order_detail, { foreignKey: "orders_fk" });
 db.users.hasMany(db.orders, {
