@@ -1,4 +1,5 @@
 var express = require("express");
+const categories = require("../models/categories");
 var router = express.Router();
 
 const db = require("../models/index");
@@ -10,20 +11,39 @@ const Op = db.Sequelize.Op;
 
 
 //get all products
-router.get("/", function (req, res, next) {
-  Products.findAll()
+router.get("/", async function (req, res, next) {
+  const categoryList = await Category.findAll();
+  await Products.findAll()
     .then((data) => {
+      //console.log(data)
       res.render("home", {
         pageTitle: "Daftar product Saat ini",
         products: data,
-        session: req.session
+        session: req.session,
+        categories: categoryList
       });
     })
-
     .catch((err) => {
       res.render("home", {
         pagetitle: "Daftar product Saat ini",
         products: [],
+      });
+    });
+});
+
+//get all category on menu
+router.get("/", function (req, res, next) {
+  Category.findAll()
+    .then((data) => {
+      res.render("templates/sidebar", {
+        
+        categories: data,
+      });
+    })
+    .catch((err) => {
+      res.render("templates/sidebar", {
+      
+        categories: [],
       });
     });
 });
@@ -143,7 +163,8 @@ router.post("/add", function (req, res, next) {
     description: req.body.description,
     quantity: req.body.quantity,
     price: req.body.price,
-    rating: null
+    rating: null,
+    category_fk: req.body.category_fk
   };
   Products.create(products)
     .then((addData) => {
@@ -239,30 +260,30 @@ router.post("/add", function (req, res, next) {
 // });
 
 
-// //Delete products
-// router.get("/delete/:id", function (req, res, next) {
-//   const id = parseInt(req.params.id);
+//Delete products
+router.get("/delete/:id", function (req, res, next) {
+  const id = parseInt(req.params.id);
 
-//   Products.destroy({
-//     where: { id: id}
-//   })
-//     .then((datadetail) => {
-//       if (datadetail) {
-//         res.redirect('/')
-//       } else {
-//         // http 404 not found
-//         res.status(404).send({
-//         message: "tidak ada ada id=" + id
-//       })
-//       }
-//     })
-//     .catch((err) => {
-//       res.render("productsDetail", {
-//         pagetitle: "Daftar Produk",
-//         products: {},
-//       });
-//     });
-// });
+  Products.destroy({
+    where: { id: id}
+  })
+    .then((datadetail) => {
+      if (datadetail) {
+        res.redirect('/')
+      } else {
+        // http 404 not found
+        res.status(404).send({
+        message: "tidak ada ada id=" + id
+      })
+      }
+    })
+    .catch((err) => {
+      res.render("productsDetail", {
+        pagetitle: "Daftar Produk",
+        products: {},
+      });
+    });
+});
 
 
 
