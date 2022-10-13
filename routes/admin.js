@@ -10,7 +10,7 @@ const Role = db.roles;
 const Products = db.products;
 const Categories = db.category;
 
-router.get("/", function (req, res, next) {
+router.get("/", auth, function (req, res, next) {
     res.render("admin/dashboard");
 
 });
