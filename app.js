@@ -4,10 +4,17 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const db = require("./models");
+var session = require("express-session");
 
 // require("dotenv").config();
 
 // const { PORT } = process.env;
+var app = express();
+app.use(
+  session({
+    secret: "12345",
+  })
+);
 
 const multer = require("multer");
 
@@ -42,6 +49,7 @@ const indexRouter = require("./routes/index");
 const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
 const checkoutRouter = require("./routes/checkout");
+const adminRouter = require("./routes/admin");
 
 db.sequelize
   .sync()
@@ -51,8 +59,6 @@ db.sequelize
   .catch((err) => {
     console.log("Error ", err);
   });
-
-var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
@@ -72,6 +78,7 @@ app.use("/", indexRouter);
 app.use("/products", productRouter);
 app.use("/cart", cartRouter);
 app.use("/checkout", checkoutRouter);
+app.use("/admin", adminRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
