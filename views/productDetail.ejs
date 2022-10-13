@@ -1,7 +1,6 @@
 
 <%- include('templates/header')-%>
-<%- include('templates/sidebar')-%>
-      
+
 <div class="col-sm-9 padding-right">
         <div class="product-details"><!--product-details-->
           <div class="col-sm-6">
@@ -30,6 +29,7 @@
                 Add to cart
               </a>
               <a href=""><img src="images/product-details/share.png" class="share img-responsive"  alt="" /></a>
+              
             </div><!--/product-information-->
           </div>
         </div><!--/product-details-->
@@ -46,6 +46,23 @@
           </div>
         </div><!--/category-tab-->
      
+        
+        <div class="container">
+          <div class="row">
+              <div class="col-sm-3">
+                  <div class="left-sidebar">
+                      &nbsp;
+                      <div>
+                            <a href="/products/delete/<%=products.id %>" class="btn btn-danger">Delete Product</a>
+                            &nbsp;
+                            <a href="/products/edit/<%=products.id %>" class="btn btn-info">Edit</a>
+
+                      </div>
+                      &nbsp;
+                  </div>
+              </div>
+          </div>
+      </div>
 
         <div class="category-tab shop-details-tab"><!--category-tab-->
           <div class="col-sm-12">

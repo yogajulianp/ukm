@@ -1,4 +1,5 @@
 var express = require("express");
+const categories = require("../models/categories");
 var router = express.Router();
 
 const db = require("../models/index");
@@ -10,28 +11,65 @@ const Op = db.Sequelize.Op;
 
 
 //get all products
-router.get("/", function (req, res, next) {
-  Products.findAll()
+router.get("/", async function (req, res, next) {
+  const categoryList = await Category.findAll();
+  await Products.findAll()
     .then((data) => {
+      //console.log(data)
       res.render("home", {
         pageTitle: "Daftar product Saat ini",
         products: data,
-        session: req.session
+        session: req.session,
+        categories: categoryList
       });
     })
-
     .catch((err) => {
       res.render("home", {
         pagetitle: "Daftar product Saat ini",
+        session: req.session,
         products: [],
       });
     });
 });
 
+//get all category on menu
+router.get("/", async function (req, res, next) {
+  await Category.findAll()
+    .then((data) => {
+      res.render("templates/sidebar", {
+        categories: data,
+        session: req.session,
+      });
+    })
+    .catch((err) => {
+      res.render("templates/sidebar", {
+        categories: [],
+      });
+    });
+});
+
+//get all category on menu detail products
+// router.get("/detail/:id", async function (req, res, next) {
+  
+//   await Category.findAll()
+//     .then((data) => {
+//       res.render("templates/sidebar", {
+ //        session: req.session
+//         categories: data,
+//       });
+//     })
+//     .catch((err) => {
+//       res.render("templates/sidebar", {
+      
+//         categories: [],
+//       });
+//     });
+// });
+
 //detail by params
 router.get("/detail/:id", async function (req, res, next) {
   const id = parseInt(req.params.id);
-
+  const categoryList = await Category.findAll();
   const isiReviews = await Reviews.findAll({
     where: {
       id_product: id
@@ -44,12 +82,14 @@ router.get("/detail/:id", async function (req, res, next) {
           pagetitle: "product Saat ini",
           products: datadetail,
           reviews: isiReviews,
-          session: req.session
+          session: req.session,
+          categories: categoryList
         });
       } else {
         // http 404 not found
         res.render("productDetail", {
           pagetitle: "product Saat ini",
+          session: req.session,
           products: {},
         });
       }
@@ -57,13 +97,14 @@ router.get("/detail/:id", async function (req, res, next) {
     .catch((err) => {
       res.render("productDetail", {
         pagetitle: "product Saat ini",
+        session: req.session,
         products: [],
       });
     });
 });
 
 //add Komentar
-router.post("/addreviews", function (req, res, next) {
+router.post("/addreviews", async function (req, res, next) {
 
   let reviews = {
     id_product: req.body.id_product,
@@ -72,7 +113,7 @@ router.post("/addreviews", function (req, res, next) {
     comment: req.body.comment,
 
   };
-  Reviews.create(reviews)
+  await Reviews.create(reviews)
     .then((addData) => {
       res.redirect(`/products/detail/${req.body.id_product}`);
     })
@@ -90,7 +131,7 @@ router.post("/addreviews", function (req, res, next) {
 router.get("/add", function (req, res, next) {
   Category.findAll({attributes: ['id', 'category']})
   .then((categories) => {
-    console.log(categories)
+    //console.log(categories)
     res.render("addProduct", {
       pageTitle: 'Tambah product',
       //path: 'products/add',
@@ -101,7 +142,6 @@ router.get("/add", function (req, res, next) {
       categories
     });
   })
- 
 });
 
 //add product
@@ -122,12 +162,12 @@ router.post("/add", function (req, res, next) {
       //path: 'products/add',
       editing: false,
       hasError: true,
+      session: req.session,
       products: {
         name: req.body.name,
         description: req.body.description,
         quantity: req.body.quantity,
         price: req.body.price,
-
       },
       errorMessage: 'file yang dikirim harus disertai gambar, harus format png/jpeg/jpg',
     });
@@ -143,7 +183,8 @@ router.post("/add", function (req, res, next) {
     description: req.body.description,
     quantity: req.body.quantity,
     price: req.body.price,
-    rating: null
+    rating: null,
+    category_fk: req.body.category_fk
   };
   Products.create(products)
     .then((addData) => {
@@ -158,111 +199,114 @@ router.post("/add", function (req, res, next) {
     });
 });
 
-// //edit product, data di ambil
-// router.get("/editproducts/:id", function (req, res, next) {
-//   const id = parseInt(req.params.id);
+//edit product, data di ambil
+router.get("/edit/:id", function (req, res, next) {
+  const id = parseInt(req.params.id);
+  let viewsData = {
+    pageTitle: 'Tambah product',
+      //path: 'products/add',
+      editing: true,
+      hasError: false,
+      errorMessage: null,
+      session: req.session,
+  };
 
-//   Products.findByPk(id)
-//     .then((dataEdit) => {
-//       if (dataEdit) {
-//         res.render("editProducts", {
-//           pageTitle: "Edit product",
-//           hasError: false,
-//           errorMessage: null,
-//           products: dataEdit,
-//         });
-//       } else {
-//         // http 404 not found
-//         res.redirect("/");
+  Products.findByPk(id)
+    .then((products) => {
+      viewsData = { ... { products }, ... viewsData}
+      return Category.findAll({attributes: ['id', 'category']})
+    })
+    .then((categories)=> {
+      viewsData = { ... { categories }, ... viewsData}
+      res.render( 'editProduct', viewsData)
+    })
+    .catch((err) => {
+      res.json({
+        info: "Error",
+        message: err.message,
+      });
+    });
+});
 
-//       }
-//     })
-//     .catch((err) => {
-//       res.json({
-//         info: "Error",
-//         message: err.message,
-//       });
-//     });
-// });
+//Edit products akan di Post
+router.post("/edit/:id", function (req, res, next) {
+  const id = parseInt(req.params.id);
+  let products = {
+    name: req.body.name,
+    image: req.file,
+    description: req.body.description,
+    quantity: req.body.quantity,
+    price: req.body.price,
+    rating: null,
+    category_fk: req.body.category_fk
+  };
+  if (!products.image) {
+    return res.status(422).render("editProduct", {
+      pageTitle: 'Edit product',
+      path: 'editproducts',
+      editing: true,
+      hasError: true,
+      session: req.session,
+      products : {
+        name: req.body.name,
+        description: req.body.description,
+        quantity: req.body.quantity,
+        price: req.body.price,
+      },
+      errorMessage: 'file yang dikirim harus disertai gambar, harus format png/jpeg/jpg',
+    });
+  }
 
-// //Edit products akan di Post
-// router.post("/editproducts/:id", function (req, res, next) {
-//   const id = parseInt(req.params.id);
-//   let products = {
-//     name: req.body.name,
-//     image: req.file,
-//     description: req.body.description,
-//     quantity: req.body.quantity,
-//     price: req.body.price,
-//     rating: req.body.rating,
-//   };
-//   if (!products.image) {
-//     return res.status(422).render("editProducts", {
-//       pageTitle: 'Edit product',
-//       path: 'editproducts',
-//       editing: true,
-//       hasError: true,
-//       products : {
-//         name: req.body.name,
-//         description: req.body.description,
-//         quantity: req.body.quantity,
-//         price: req.body.price,
-//         rating: req.body.rating,
-//       },
-//       errorMessage: 'file yang dikirim harus disertai gambar, harus format png/jpeg/jpg',
-//     });
-//   }
+  var image = products.image.path
+  var image2 = image.replace(/\\/g, "/")
+  products = {
+    name: req.body.name,
+    image: image2,
+    description: req.body.description,
+    quantity: req.body.quantity,
+    rating: null,
+    category_fk: req.body.category_fk
+  };
 
-//   var image = products.image.path
-//   var image2 = image.replace(/\\/g, "/")
-//   products = {
-//     name: req.body.name,
-//     image: image2,
-//     description: req.body.description,
-//     quantity: req.body.quantity,
-//     price: req.body.price,
-//     rating: req.body.rating,
-//   };
-
-//   Products.update(products, {
-//     where: { id: id },
-//   })
-//     .then((num) => {
-//       res.redirect("/");
-//     })
-//     .catch((err) => {
-//       res.json({
-//         info: "Error",
-//         message: err.message,
-//       });
-//     });
-// });
+  Products.update(products, {
+    where: { id: id },
+  })
+    .then((num) => {
+      res.redirect("/products");
+    })
+    .catch((err) => {
+      res.json({
+        info: "Error",
+        message: err.message,
+      });
+    });
+});
 
 
-// //Delete products
-// router.get("/delete/:id", function (req, res, next) {
-//   const id = parseInt(req.params.id);
+//Delete products
+router.get("/delete/:id", function (req, res, next) {
+  const id = parseInt(req.params.id);
 
-//   Products.destroy({
-//     where: { id: id}
-//   })
-//     .then((datadetail) => {
-//       if (datadetail) {
-//         res.redirect('/')
-//       } else {
-//         // http 404 not found
-//         res.status(404).send({
-//         message: "tidak ada ada id=" + id
-//       })
-//       }
-//     })
-//     .catch((err) => {
-//       res.render("productsDetail", {
-//         pagetitle: "Daftar Produk",
-//         products: {},
-//       });
-//     });
-// });
+  Products.destroy({
+    where: { id: id}
+  })
+    .then((datadetail) => {
+      if (datadetail) {
+        res.redirect('/')
+      } else {
+        // http 404 not found
+        res.status(404).send({
+        message: "tidak ada ada id=" + id
+      })
+      }
+    })
+    .catch((err) => {
+      res.render("productsDetail", {
+        pagetitle: "Daftar Produk",
+        products: {},
+      });
+    });
+});
 
 
 

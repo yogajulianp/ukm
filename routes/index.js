@@ -6,23 +6,45 @@ const db = require('../models/index');
 const User = db.users;
 const Role = db.roles;
 const Products = db.products;
+const Category = db.category;
 
 var bcrypt = require('bcryptjs');
 
 /* GET home page. */
-router.get("/", function (req, res, next) {
-  Products.findAll()
+//get all products
+router.get("/", async function (req, res, next) {
+  const categoryList = await Category.findAll();
+  await Products.findAll()
     .then((data) => {
+      //console.log(data)
       res.render("home", {
         pageTitle: "Daftar product Saat ini",
         products: data,
-        session: req.session
+        session: req.session,
+        categories: categoryList
       });
     })
     .catch((err) => {
       res.render("home", {
         pagetitle: "Daftar product Saat ini",
         products: [],
+      });
+    });
+});
+
+//get all category on menu
+router.get("/", function (req, res, next) {
+  Category.findAll()
+    .then((data) => {
+      res.render("templates/sidebar", {
+        session: req.session,
+        categories: data,
+      });
+    })
+    .catch((err) => {
+      res.render("templates/sidebar", {
+      
+        categories: [],
       });
     });
 });

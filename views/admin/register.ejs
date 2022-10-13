@@ -23,10 +23,14 @@
 </head>
 
 <body class="bg-gradient-primary">
+
     <div class="container">
+
         <!-- Outer Row -->
         <div class="row justify-content-center">
+
             <div style="padding-top: 50px;">
+
                 <div class="card o-hidden border-0 shadow-lg my-5 justify-content-center">
                     <div class="card-body p-0">
                         <!-- Nested Row within Card Body -->
@@ -37,14 +41,30 @@
                                     <div class="text-center">
                                         <h1 class="h4 text-gray-900 mb-4">Welcome Back!</h1>
                                     </div>
-                                    <form class="user" method="POST" action="/admin/login">
+                                    <form method="post" action="register">
                                         <div class="form-group">
-                                            <input type="text" class="form-control form-control-user" id="username"
-                                                name="username" placeholder="Enter Username...">
+                                            <input type="text" class="form-control form-control-user" name="name"
+                                                placeholder="Nama Lengkap">
                                         </div>
                                         <div class="form-group">
-                                            <input type="password" class="form-control form-control-user" id="password"
+                                            <input type="text" class="form-control form-control-user" name="email"
+                                                placeholder="Email">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user" name="username"
+                                                placeholder="Username">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="password" class="form-control form-control-user"
                                                 name="password" placeholder="Password">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user" name="lat"
+                                                placeholder="Location Lattitude">
+                                        </div>
+                                        <div class="form-group">
+                                            <input type="text" class="form-control form-control-user" name="lon"
+                                                placeholder="Location Longitude">
                                         </div>
                                         <div class="form-group">
                                             <div class="custom-control custom-checkbox small">
@@ -53,21 +73,30 @@
                                                     Me</label>
                                             </div>
                                         </div>
-                                        <button type="submit" class="btn btn-primary btn-user btn-block">Login</button>
+                                        <button type="submit" class="btn btn-primary btn-user btn-block">
+                                            Register
+                                        </button>
                                         <hr>
                                     </form>
                                     <hr>
                                     <div class="text-center">
-                                        <a class="small" href="register">Create an Account!</a>
+                                        <a class="small" href="forgot-password.html">Forgot Password?</a>
+                                    </div>
+                                    <div class="text-center">
+                                        <a class="small" href="login">Already have an account? Login here</a>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
+
             </div>
+
         </div>
+
     </div>
+
     <!-- Bootstrap core JavaScript-->
     <script src="vendor/jquery/jquery.min.js"></script>
     <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
