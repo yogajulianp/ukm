@@ -4,7 +4,7 @@
     <div class="breadcrumbs">
       <ol class="breadcrumb">
         <li><a href="/products">Products</a></li>
-        <li class="active">Add Product</li>
+        <li class="active">Edit Product</li>
       </ol>
     </div>
     <!--/breadcrums-->
@@ -13,7 +13,7 @@
       <div class="row">
         <div class="col-sm-12">
           <div class="shopper-info">
-            <p>Tambah Produk</p>
+            <p>Edit Produk</p>
             <% if (errorMessage) { %>
             <div class="alert alert-danger" role="alert">
               <%= errorMessage %>
@@ -21,21 +21,25 @@
             <% } %>
             <form
               method="POST"
-              action="/products/add"
+              action="/products/edit/<%=products.id %>"
               enctype="multipart/form-data"
             >
+            <% if (editing) { %>
+              <input type="hidden" name="id" value="<%= products.id %>"/>
+              <% } %>
               <input
                 type="text"
                 name="name"
                 id="name"
                 placeholder="Judul Product"
-                value="<% if ( hasError) { %><%= products.name %><% } %>"
+                value="<% if ( editing || hasError) { %><%= products.name %><% } %>"
               />
               <input
                 type="file"
                 accept="image/png, image/jpeg, image/jpg"
                 name="image"
                 id="image"
+                value="<%= editing ? products.image : '' %>"
               />
              
               <input
@@ -43,21 +47,21 @@
                 name="quantity"
                 id="quantity"
                 placeholder="Jumlah Stok Product"
-                value="<% if ( hasError) { %><%= products.quantity %><% } %>"
+                value="<% if ( editing || hasError) { %><%= products.quantity %><% } %>"
               />
               <input
                 type="number"
                 name="price"
                 id="price"
                 placeholder="Harga Product"
-                value="<% if ( hasError) { %><%= products.price %><% } %>"
+                value="<% if ( editing || hasError) { %><%= products.price %><% } %>"
               />
               <p>
                 <select name="category_fk" id="" class="form-control">
                   <option value="">Pilih Kategori</option>
                   <% for (let item of categories) { %>
-                    <option value="<%=item.id%>"><%=item.category
-                      %></option>
+                    <option value="<%=item.id%>"
+                      <%= editing && item.id === products.category_fk ? "selected" : "" %> > <%=item.category%></option>
                   <% } %>
                 </select>
               </p>
@@ -67,10 +71,10 @@
                 rows="5"
                 placeholder="Deskripsi Produk"
               >
-              <% if (hasError) { %><%= products.description %><% } %></textarea
+              <% if ( editing ||hasError) { %><%= products.description %><% } %></textarea
               >
               <button type="submit" class="btn btn-primary">
-                Tambah Product
+                Edit Product
               </button>
               &nbsp;
               <a href="/products" class="btn btn-primary">Cancel</a>

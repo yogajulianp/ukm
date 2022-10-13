@@ -37,7 +37,7 @@ router.get("/", function (req, res, next) {
   Category.findAll()
     .then((data) => {
       res.render("templates/sidebar", {
-        
+        session: req.session,
         categories: data,
       });
     })
