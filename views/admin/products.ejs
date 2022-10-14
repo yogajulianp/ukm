@@ -26,6 +26,7 @@
                                     <th>Deskripsi</th>
                                     <th>Stok</th>
                                     <th>Harga</th>
+                                    <th>Detail</th>
                                     <th></th>
                                 </tr>
                             </thead>
@@ -48,6 +49,9 @@
                                         </td>
                                         <td>
                                             Rp.<%= item.price %>
+                                        </td>
+                                        <td>
+                                            <a href="/products/detail/<%=item.id%>" class="btn btn-info">Detail</a>
                                         </td>
                                        
                                         <td>

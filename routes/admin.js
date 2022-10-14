@@ -176,7 +176,7 @@ router.post("/add_products", function (req, res, next) {
   };
   Products.create(products)
     .then((addData) => {
-      res.redirect("/products");
+      res.redirect("/admin/products");
     })
     .catch((err) => {
       res.json({
@@ -207,7 +207,7 @@ router.get("/edit_products/:id", async function (req, res, next) {
     })
     .then((categories) => {
       viewsData = { ...{ categories }, ...viewsData };
-      res.render("admin/products_add", viewsData);
+      res.render("admin/products_edit", viewsData);
     })
     .catch((err) => {
       res.json({
@@ -218,7 +218,7 @@ router.get("/edit_products/:id", async function (req, res, next) {
 });
 
 //Edit products akan di Post
-router.post("/edit_products/:id", function (req, res, next) {
+router.post("/edit_products/:id", async function (req, res, next) {
   const id = parseInt(req.params.id);
   let products = {
     name: req.body.name,
@@ -261,11 +261,11 @@ router.post("/edit_products/:id", function (req, res, next) {
     category_fk: req.body.category_fk,
   };
 
-  Products.update(products, {
+  await Products.update(products, {
     where: { id: id },
   })
     .then((num) => {
-      res.redirect("/products");
+      res.redirect("/admin/products");
     })
     .catch((err) => {
       res.json({
@@ -284,7 +284,7 @@ router.get("/delete_products", function (req, res, next) {
   })
     .then((datadetail) => {
       if (datadetail) {
-        res.redirect("/");
+        res.redirect("/admin/products");
       } else {
         // http 404 not found
         res.status(404).send({
