@@ -14,7 +14,11 @@ var bcrypt = require('bcryptjs');
 //get all products
 router.get("/", async function (req, res, next) {
   const categoryList = await Category.findAll();
-  await Products.findAll()
+  await Products.findAll({
+    order: [
+      ['createdAt', 'DESC']
+    ]
+  })
     .then((data) => {
       //console.log(data)
       res.render("home", {

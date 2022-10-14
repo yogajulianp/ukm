@@ -8,19 +8,27 @@ const Reviews = db.reviews;
 const Category = db.category;
 const Op = db.Sequelize.Op;
 
-
+const {
+  body,
+  check,
+  validationResult
+} = require('express-validator');
 
 //get all products
 router.get("/", async function (req, res, next) {
   const categoryList = await Category.findAll();
-  await Products.findAll()
+  await Products.findAll({
+    order: [
+      ['createdAt', 'DESC']
+    ]
+  })
     .then((data) => {
       //console.log(data)
       res.render("home", {
         pageTitle: "Daftar product Saat ini",
         products: data,
         session: req.session,
-        categories: categoryList
+        categories: categoryList,
       });
     })
     .catch((err) => {
@@ -50,17 +58,17 @@ router.get("/", async function (req, res, next) {
 
 //get all category on menu detail products
 // router.get("/detail/:id", async function (req, res, next) {
-  
+
 //   await Category.findAll()
 //     .then((data) => {
 //       res.render("templates/sidebar", {
- //        session: req.session
+//        session: req.session
 //         categories: data,
 //       });
 //     })
 //     .catch((err) => {
 //       res.render("templates/sidebar", {
-      
+
 //         categories: [],
 //       });
 //     });
@@ -72,8 +80,8 @@ router.get("/detail/:id", async function (req, res, next) {
   const categoryList = await Category.findAll();
   const isiReviews = await Reviews.findAll({
     where: {
-      id_product: id
-    }
+      id_product: id,
+    },
   });
   await Products.findByPk(id)
     .then((datadetail) => {
@@ -83,7 +91,7 @@ router.get("/detail/:id", async function (req, res, next) {
           products: datadetail,
           reviews: isiReviews,
           session: req.session,
-          categories: categoryList
+          categories: categoryList,
         });
       } else {
         // http 404 not found
@@ -105,13 +113,11 @@ router.get("/detail/:id", async function (req, res, next) {
 
 //add Komentar
 router.post("/addreviews", async function (req, res, next) {
-
   let reviews = {
     id_product: req.body.id_product,
     //id_user : req.body.id_user,
     score: req.body.score,
     comment: req.body.comment,
-
   };
   await Reviews.create(reviews)
     .then((addData) => {
@@ -125,23 +131,20 @@ router.post("/addreviews", async function (req, res, next) {
     });
 });
 
-
-
 //add product
 router.get("/add", function (req, res, next) {
-  Category.findAll({attributes: ['id', 'category']})
-  .then((categories) => {
+  Category.findAll({ attributes: ["id", "category"] }).then((categories) => {
     //console.log(categories)
     res.render("addProduct", {
-      pageTitle: 'Tambah product',
-      //path: 'products/add',
+      pageTitle: "Tambah product",
+      path: "/products/add",
       editing: false,
       hasError: false,
       errorMessage: null,
       session: req.session,
-      categories
+      categories,
     });
-  })
+  });
 });
 
 //add product
@@ -153,29 +156,56 @@ router.post("/add", function (req, res, next) {
     quantity: req.body.quantity,
     price: req.body.price,
     rating: null,
-    category_fk: req.body.category_fk
+    category_fk: req.body.category_fk,
   };
 
-  if (!products.image) {
-    return res.status(422).render("addProducts", {
-      pageTitle: 'Tambah product',
-      //path: 'products/add',
-      editing: false,
-      hasError: true,
-      session: req.session,
-      products: {
-        name: req.body.name,
-        description: req.body.description,
-        quantity: req.body.quantity,
-        price: req.body.price,
-      },
-      errorMessage: 'file yang dikirim harus disertai gambar, harus format png/jpeg/jpg',
+  if (!products.image || !products.quantity || !products.image || !products.description || !products.price || !products.name) {
+    Category.findAll({ attributes: ["id", "category"] })
+    .then((categories) => {
+      console.log(categories)
+      return res.status(422).render("addProduct", {
+        pageTitle: "Tambah product",
+        path: "/products/add",
+        editing: false,
+        hasError: true,
+        session: req.session,
+        categories,
+        products: {
+          name: req.body.name,
+          description: req.body.description,
+          quantity: req.body.quantity,
+          price: req.body.price,
+        },
+        errorMessage:
+          "file yang dikirim harus disertai gambar, harus format png/jpeg/jpg",
+      });
     });
-  }
-  var image = products.image.path
-  var image2 = image.replace(/\\/g, "/")
+    return res.redirect("/products/add");
+    // const categories = Category.findAll({attributes: ['id', 'category']})
+    // return res.status(422).render("addProduct", {
+    //   pageTitle: 'Tambah product',
+    //   path: '/products/add',
+    //   editing: false,
+    //   hasError: true,
+    //   session: req.session,
+    //   products: {
+    //     name: req.body.name,
+    //     description: req.body.description,
+    //     quantity: req.body.quantity,
+    //     price: req.body.price,
 
-  //var rating2 = 
+    //   },
+    //   categories,
+    //   errorMessage: 'file yang dikirim harus disertai gambar, harus format png/jpeg/jpg',
+    // });
+  }
+
+  
+
+  var image = products.image.path;
+  var image2 = image.replace(/\\/g, "/");
+
+  //var rating2 =
 
   products = {
     name: req.body.name,
@@ -184,11 +214,10 @@ router.post("/add", function (req, res, next) {
     quantity: req.body.quantity,
     price: req.body.price,
     rating: null,
-    category_fk: req.body.category_fk
+    category_fk: req.body.category_fk,
   };
   Products.create(products)
     .then((addData) => {
-
       res.redirect("/products");
     })
     .catch((err) => {
@@ -203,22 +232,22 @@ router.post("/add", function (req, res, next) {
 router.get("/edit/:id", function (req, res, next) {
   const id = parseInt(req.params.id);
   let viewsData = {
-    pageTitle: 'Tambah product',
-      //path: 'products/add',
-      editing: true,
-      hasError: false,
-      errorMessage: null,
-      session: req.session,
+    pageTitle: "Tambah product",
+    path: `products/edit/${id}`,
+    editing: true,
+    hasError: false,
+    errorMessage: null,
+    session: req.session,
   };
 
   Products.findByPk(id)
     .then((products) => {
-      viewsData = { ... { products }, ... viewsData}
-      return Category.findAll({attributes: ['id', 'category']})
+      viewsData = { ...{ products }, ...viewsData };
+      return Category.findAll({ attributes: ["id", "category"] });
     })
-    .then((categories)=> {
-      viewsData = { ... { categories }, ... viewsData}
-      res.render( 'editProduct', viewsData)
+    .then((categories) => {
+      viewsData = { ...{ categories }, ...viewsData };
+      res.render("editProduct", viewsData);
     })
     .catch((err) => {
       res.json({
@@ -238,34 +267,38 @@ router.post("/edit/:id", function (req, res, next) {
     quantity: req.body.quantity,
     price: req.body.price,
     rating: null,
-    category_fk: req.body.category_fk
+    category_fk: req.body.category_fk,
   };
-  if (!products.image) {
-    return res.status(422).render("editProduct", {
-      pageTitle: 'Edit product',
-      path: 'editproducts',
-      editing: true,
-      hasError: true,
-      session: req.session,
-      products : {
-        name: req.body.name,
-        description: req.body.description,
-        quantity: req.body.quantity,
-        price: req.body.price,
-      },
-      errorMessage: 'file yang dikirim harus disertai gambar, harus format png/jpeg/jpg',
-    });
+  
+  if (!products.image || !products.quantity || !products.image || !products.description || !products.price || !products.name  ) {
+    // return res.status(422).render("editProduct", {
+    //   pageTitle: "Edit product",
+    //   path: `products/edit/${id}`,
+    //   editing: true,
+    //   hasError: true,
+    //   session: req.session,
+    //   products: {
+    //     name: req.body.name,
+    //     description: req.body.description,
+    //     quantity: req.body.quantity,
+    //     price: req.body.price,
+    //   },
+    //   errorMessage:
+    //     "file yang dikirim harus disertai gambar, harus format png/jpeg/jpg",
+    // });
+    return res.redirect(`/products/edit/${id}`);
   }
 
-  var image = products.image.path
-  var image2 = image.replace(/\\/g, "/")
+  var image = products.image.path;
+  var image2 = image.replace(/\\/g, "/");
   products = {
     name: req.body.name,
     image: image2,
     description: req.body.description,
     quantity: req.body.quantity,
     rating: null,
-    category_fk: req.body.category_fk
+    price: req.body.price,
+    category_fk: req.body.category_fk,
   };
 
   Products.update(products, {
@@ -282,22 +315,21 @@ router.post("/edit/:id", function (req, res, next) {
     });
 });
 
-
 //Delete products
 router.get("/delete/:id", function (req, res, next) {
   const id = parseInt(req.params.id);
 
   Products.destroy({
-    where: { id: id}
+    where: { id: id },
   })
     .then((datadetail) => {
       if (datadetail) {
-        res.redirect('/')
+        res.redirect("/");
       } else {
         // http 404 not found
         res.status(404).send({
-        message: "tidak ada ada id=" + id
-      })
+          message: "tidak ada ada id=" + id,
+        });
       }
     })
     .catch((err) => {
@@ -307,7 +339,5 @@ router.get("/delete/:id", function (req, res, next) {
       });
     });
 });
-
-
 
 module.exports = router;
