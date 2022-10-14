@@ -12,7 +12,6 @@ var bcrypt = require('bcryptjs');
 
 /* GET home page. */
 //get all products
-//get all products
 router.get("/", async function (req, res, next) {
   const categoryList = await Category.findAll();
   await Products.findAll({

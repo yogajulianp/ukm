@@ -19,7 +19,7 @@ const session = require("express-session");
 router.get("/", async function (req, res, next) {
   const categoryList = await Category.findAll();
   await Products.findAll({
-    include : Category,
+       include : Category,
     order: [
       ['createdAt', 'DESC']
     ]
