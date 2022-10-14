@@ -51,6 +51,7 @@ const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
 const checkoutRouter = require("./routes/checkout");
 const adminRouter = require("./routes/admin");
+const transactionRouter = require("./routes/transaction");
 
 db.sequelize
   .sync()
@@ -80,6 +81,7 @@ app.use("/products", productRouter);
 app.use("/cart", cartRouter);
 app.use("/checkout", checkoutRouter);
 app.use("/admin", adminRouter);
+app.use("/transaction", transactionRouter);
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
