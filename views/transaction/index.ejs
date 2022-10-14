@@ -1,0 +1,31 @@
+<%- include('../templates/header')-%>
+<section id="cart_items">
+  <div class="container">
+    <div class="breadcrumbs">
+      <ol class="breadcrumb">
+        <li><a href="/">Home</a></li>
+        <li class="active">My Transaction</li>
+      </ol>
+    </div>
+    <h3>Saldo Anda <%= saldo%></h3>
+    <div class="table-responsive cart_info">
+      <table class="table table-condensed">
+        <thead>
+          <tr class="cart_menu">
+            <td class="price">No</td>
+            <td class="quantity">Total Payment</td>
+            <td class="total">Status</td>
+            <td class="total">Action</td>
+          </tr>
+        </thead>
+        <tbody>
+          <% for(var i = 0; i < data.length; i++) { %> <%-
+          include('transaction_item', {data:data[i]})-%> <% }%>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+<!-- ATAS BAWAH -->
+
+<%- include('../templates/footer')-%>

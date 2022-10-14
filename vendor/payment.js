@@ -1,3 +1,5 @@
+const http = require("https");
+
 async function registerPaymentAccount(name, email, username, password) {
   return new Promise((resolve) => {
     var postData = JSON.stringify({
@@ -75,10 +77,10 @@ async function GetSaldo(username) {
   });
 }
 
-async function PaymentToUser(idUserSeller, userTarget, tota_price, createdAt) {
+async function PaymentToUser(idUserFrom, userTarget, tota_price, createdAt) {
   return new Promise((resolve) => {
     var postData = JSON.stringify({
-      userMe: idUserSeller,
+      userMe: idUserFrom,
       userTarget: userTarget,
       nominal: tota_price,
       date: createdAt,
@@ -117,4 +119,4 @@ async function PaymentToUser(idUserSeller, userTarget, tota_price, createdAt) {
   });
 }
 
-module.exports = { registerPaymentAccount, GetSaldo };
+module.exports = { registerPaymentAccount, GetSaldo, PaymentToUser };

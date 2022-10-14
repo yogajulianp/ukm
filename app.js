@@ -51,7 +51,7 @@ const productRouter = require("./routes/products");
 const cartRouter = require("./routes/cart");
 const checkoutRouter = require("./routes/checkout");
 const adminRouter = require("./routes/admin");
-const transactionRouter = require("./routes/transactions");
+const transactionRouter = require("./routes/transaction");
 
 db.sequelize
   .sync()

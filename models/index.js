@@ -28,6 +28,7 @@ db.category = require("./categories")(sequelize, Sequelize);
 db.users.hasMany(db.order_detail, { foreignKey: "user_fk" });
 db.users.hasOne(db.ukms);
 db.ukms.hasOne(db.users);
+db.ukms.belongsTo(db.users);
 db.users.belongsTo(db.roles);
 db.users.hasMany(db.reviews, { foreignKey: "id_user" });
 
