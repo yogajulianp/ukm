@@ -129,6 +129,7 @@ router.post('/login', function (req, res, next) {
         if (loginValid) {
           req.session.islogin = true;
           req.session.username = req.body.username;
+          req.session.userId = data.id;
           res.redirect('/');
         } else {
           res.redirect('/login');

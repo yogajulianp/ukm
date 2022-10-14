@@ -1,0 +1,41 @@
+<%- include('templates/header')-%>
+<section id="cart_items">
+  <div class="container">
+    <div class="breadcrumbs">
+      <ol class="breadcrumb">
+        <li><a href="#">Home</a></li>
+        <li class="active">Transactions</li>
+      </ol>
+    </div>
+    
+    <div class="category-tab shop-details-tab"><!--category-tab-->
+        <div class="col-sm-12">
+            <ul class="nav nav-tabs">
+                <li><a href="#reviews" data-toggle="tab">All Transactions</a></li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div class="tab-pane fade active in" id="reviews" >    
+                <% data.forEach(function(item) {%>
+                <div class="col-sm-12">
+                    <ul>
+                        <li><a href=""><i class="fa fa-user"></i><%= session.username %></a></li>
+                        <li><a href=""><i class="fa fa-clock-o"></i><%= item.status %></a></li>
+                        <li><a href=""><i class="fa fa-calendar-o"></i><%= item.createdAt %></a></li>
+                    </ul>
+                    <p><b>Ongkos Kirim : Rp. <%= item.orders[0].delivery_price %></b></p>
+                    <p><b>Total Belanja : Rp.<%= item.total_payment %> </b></p>                   
+                    
+                </div>
+                <h2 class="title text-center">-</h2>
+                <% }) %>
+            </div>           
+                        
+        </div>
+    </div><!--/category-tab-->
+
+  </div>
+</section>
+<!-- ATAS BAWAH -->
+
+<%- include('templates/footer')-%>
