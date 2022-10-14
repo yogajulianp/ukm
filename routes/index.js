@@ -12,21 +12,28 @@ var bcrypt = require('bcryptjs');
 
 /* GET home page. */
 //get all products
+//get all products
 router.get("/", async function (req, res, next) {
   const categoryList = await Category.findAll();
-  await Products.findAll()
+  await Products.findAll({
+    include : Category,
+    order: [
+      ['createdAt', 'DESC']
+    ]
+  })
     .then((data) => {
-      //console.log(data)
+      console.log(data)
       res.render("home", {
         pageTitle: "Daftar product Saat ini",
         products: data,
         session: req.session,
-        categories: categoryList
+        categories: categoryList,
       });
     })
     .catch((err) => {
       res.render("home", {
         pagetitle: "Daftar product Saat ini",
+        session: req.session,
         products: [],
       });
     });

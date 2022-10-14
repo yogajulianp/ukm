@@ -39,14 +39,15 @@
               />
              
               <input
-                type="number"
+              type="number" 
                 name="quantity"
                 id="quantity"
                 placeholder="Jumlah Stok Product"
                 value="<% if ( hasError) { %><%= products.quantity %><% } %>"
               />
               <input
-                type="number"
+                type="number" 
+                step="0.01"
                 name="price"
                 id="price"
                 placeholder="Harga Product"

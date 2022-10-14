@@ -1,14 +1,27 @@
 var express = require("express");
+const auth = require("../auth");
 var router = express.Router();
 const { order_detail, orders, products, sequelize } = require("../models");
 
-router.get("/", async function (req, res, next) {
+router.get("/", auth, async function (req, res, next) {
   await DeleteOrderOnSpecificUser(3);
   let data = await getAllOrderDetailSpesificUser(3);
-  res.render("cart/cart", {
-    data,
-    session: req.session
+  data = data.map((element) => {
+    let tempPrice = element["product.price"] * element.quantity;
+    return {
+      ...element,
+      "product.price": new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(element["product.price"]),
+
+      "product.price_total": new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(tempPrice),
+    };
   });
+  res.render("cart/cart", { data, session: req.session });
 });
 
 router.get("/add", async function (req, res, next) {
