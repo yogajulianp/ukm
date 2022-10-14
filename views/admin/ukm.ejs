@@ -1,29 +1,45 @@
 <%- include('templates/admin_header') %>
-    <%- include('templates/admin_sidebar') %>
-        <!-- Begin Page Content -->
-        <div class="container-fluid">
+<%- include('templates/admin_sidebar') %>
+<!-- Begin Page Content -->
+<div class="container-fluid">
 
-            <!-- Page Heading -->
-            <h1 class="h3 mb-2 text-gray-800">
-                <%= pageTitle %>
-            </h1>
-            <p class="mb-4">
+    <!-- Page Heading -->
+    <h1 class="h3 mb-2 text-gray-800">
+        <%= pageTitle %>
+    </h1>
 
-                <%if(data==0) { %>
+    <div class="col-lg-6 mb-4">
+
+        <!-- Illustrations -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-warning">Informasi UKM Saya</h6>
+            </div>
+            <div class="card-body">
+                <div class="text-center">
+                    <img class="img-fluid px-5 px-sm-5 mt-3 mb-4" style="width: 20rem;" src="img/shop.svg" alt="...">
+                </div>
+                <p class="mb-4 row justify-content-center">
+
+                    <%if(data==0) { %>
                     buat dulu <a href="add_ukm">disini</a>
                     <% } else { %>
-                        <p>Nama UKM = <%= data.name %>.</p>
-                        <p>Deskripsi = <%= data.description %>.</p>
-                        <p>Alamat = <%= data.address %>.</p>
-                        <% } %>
-            </p>
-
-
-
+                    <p>Nama UKM = <%= data.name %></p>
+                    <p>Deskripsi = <%= data.description %>.</p>
+                    <p>Alamat = <%= data.address %></p>
+                    <a href="edit_ukm?id=data.id" class="btn btn-primary "><i class="fas fa-edit fa-sm ">Edit</i></a>
+                </p>
+                <% } %>
+            </div>
         </div>
-        <!-- /.container-fluid -->
 
-        </div>
-        <!-- End of Main Content -->
 
-        <%- include('templates/admin_footer') %>
+
+
+    </div>
+    <!-- /.container-fluid -->
+
+</div>
+<!-- End of Main Content -->
+
+<%- include('templates/admin_footer') %>
