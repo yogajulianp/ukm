@@ -2,7 +2,9 @@ var express = require("express");
 var router = express.Router();
 const { order_detail, orders, products, sequelize } = require("../models");
 
-router.get("/", async function (req, res, next) {
+const auth = require('../auth');
+
+router.get("/", auth, async function (req, res, next) {
   const listOrder = await GetOrderFromSpecificUser(3);
   let TotalPrice = 0;
   listOrder.forEach((element) => {
@@ -12,7 +14,11 @@ router.get("/", async function (req, res, next) {
     style: "currency",
     currency: "IDR",
   }).format(TotalPrice);
-  res.render("cart/checkout/", { data: listOrder, TotalPrice });
+  res.render("cart/checkout/", {
+    data: listOrder,
+    TotalPrice,
+    session: req.session
+  });
 });
 
 router.get("/delete/:id", async function (req, res, next) {

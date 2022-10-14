@@ -69,15 +69,12 @@
 <!--/slider-->
 
 <section>
-    
+
     <div class="container">
         <div class="row">
             <div class="col-sm-3">
                 <div class="left-sidebar">
                     &nbsp;
-                    <div>
-                          <a href="/products/add" class="btn btn-primary">Add Product</a>
-                    </div>
                     &nbsp;
                 </div>
             </div>
@@ -91,17 +88,17 @@
                     <h2>Category</h2>
                     <div class="panel-group category-products" id="accordian">
                         <!--category-productsr-->
-                      
+
                         <% categories.forEach(function(elemen) {%>
                         <div class="panel panel-default">
                             <div class="panel-heading">
                                 <h4 class="panel-title"><a href="#"><%=elemen.category%></a></h4>
                             </div>
                         </div>
-                        <%} );%> 
-                        
+                        <%} );%>
+
                     </div>
-                    <!--/category-products-->						
+                    <!--/category-products-->
 
                 </div>
             </div>

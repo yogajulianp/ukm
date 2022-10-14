@@ -1,118 +1,126 @@
-
 <%- include('templates/header')-%>
 
 <div class="col-sm-9 padding-right">
-        <div class="product-details"><!--product-details-->
-          <div class="col-sm-6">
-            <div class="view-product">
-              <img src="/<%= products.image %>" alt="<%=products.title %>" />
-              <h3>ZOOM</h3>
-            </div>
-
-          </div>
-          <div class="col-sm-6">
-            <div class="product-information"><!--/product-information-->
-              <img src="images/product-details/new.jpg" class="newarrival" alt="" />
-              <h2><%=products.name%></h2>
-              <img src="images/product-details/rating.png" alt="" />
-              <span>
-                <span>RP <%=products.price%> </span>
-                
-              </span>
-              <p><b>Availability:</b> <%=products.quantity%> In Stock</p>
-              <p><b>Condition:</b> New</p>
-              <p><b>Brand:</b> E-SHOPPER</p>
-              <p class="bg-white"><%=products.description%></p>
-            
-              <a type="button" class="btn btn-fefault cart" href="/cart/add?productId=<%=products.id%>">
-                <i class="fa fa-shopping-cart"></i>
-                Add to cart
-              </a>
-              <a href=""><img src="images/product-details/share.png" class="share img-responsive"  alt="" /></a>
-              
-            </div><!--/product-information-->
-          </div>
-        </div><!--/product-details-->
-        
-        <div class="category-tab shop-details-tab"><!--category-tab-->
-          <div class="col-sm-12">
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="" data-toggle="tab">Details</a></li>
-            </ul>
-            <div class="container" style="background-color: #fffdfd;">
-              <h5>Deskripsi</h5>
-              <p class="bg-white"><%=products.description%></p>
-            </div>
-          </div>
-        </div><!--/category-tab-->
-     
-        
-        <div class="container">
-          <div class="row">
-              <div class="col-sm-3">
-                  <div class="left-sidebar">
-                      &nbsp;
-                      <div>
-                            <a href="/products/delete/<%=products.id %>" class="btn btn-danger">Delete Product</a>
-                            &nbsp;
-                            <a href="/products/edit/<%=products.id %>" class="btn btn-info">Edit</a>
-
-                      </div>
-                      &nbsp;
-                  </div>
-              </div>
-          </div>
+  <div class="product-details">
+    <!--product-details-->
+    <div class="col-sm-6">
+      <div class="view-product">
+        <img src="/<%= products.image %>" alt="<%=products.title %>" />
+        <h3>ZOOM</h3>
       </div>
 
-        <div class="category-tab shop-details-tab"><!--category-tab-->
-          <div class="col-sm-12">
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="" data-toggle="tab">Reviews (5)</a></li>
-            </ul>
-          </div>
-          <div class="tab-content">
-            <div class="tab-pane fade active in" id="reviews" >
-              <div class="col-sm-12">
-                <%reviews.forEach(function(element) {%>
-                <div>
-                  <ul>
-                    <li><a href=""><i class="fa fa-user"></i>UserName</a></li>
-                    <li><a href=""><i class="fa fa-clock-o"></i><%= element.createdAt.toString().substring(0, 24) %></a></li>
-                  </ul>
-                  <p>nilai : <%=element.score%>/5 </p>
-                  <p><%=element.comment%></p>
-                </div>
-                <%} );%>
+    </div>
+    <div class="col-sm-6">
+      <div class="product-information">
+        <!--/product-information-->
+        <img src="images/product-details/new.jpg" class="newarrival" alt="" />
+        <h2><%=products.name%></h2>
+        <img src="images/product-details/rating.png" alt="" />
+        <span>
+          <span>RP <%=products.price%> </span>
 
-                <div class="container" style="background-color: #ffffff;">
-                  <p><b>Kirim Ulasan</b></p>
-                  <form method="POST" action="/products/addreviews">
-                    <div class="mb-3">
-                      <input type="hidden" name="id_product" id="id_product" value="<%= products.id %>">
-                        <label for="nama" class="form-label">Skor</label>
-                        <input type="number" class="form-control" name="score" id="score"  placeholder="nilai ulasan 1-5">
-                      </div>
-                    <div class="mb-3">
-                      <label for="comment" class="form-label">Isi Ulasan</label>
-                      <input type="text" class="form-control" name="comment" required id="comment"  placeholder="isi komentar">
-                    </div>
-                    <button  type="submit" class="btn btn-primary">kirim Ulasan</button>
-                    &nbsp;
-                    &nbsp;
-                  </form>
-                </div>
-                
-            
-              </div>
-            </div>
-            
-          </div>
-        </div><!--/category-tab-->
-        
-        
+        </span>
+        <p><b>Availability:</b> <%=products.quantity%> In Stock</p>
+        <p><b>Condition:</b> New</p>
+        <p><b>Brand:</b> E-SHOPPER</p>
+        <p class="bg-white"><%=products.description%></p>
+
+        <a type="button" class="btn btn-fefault cart" href="/cart/add?productId=<%=products.id%>">
+          <i class="fa fa-shopping-cart"></i>
+          Add to cart
+        </a>
+        <a href=""><img src="images/product-details/share.png" class="share img-responsive" alt="" /></a>
+
+      </div>
+      <!--/product-information-->
+    </div>
+  </div>
+  <!--/product-details-->
+
+  <div class="category-tab shop-details-tab">
+    <!--category-tab-->
+    <div class="col-sm-12">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="" data-toggle="tab">Details</a></li>
+      </ul>
+      <div class="container" style="background-color: #fffdfd;">
+        <h5>Deskripsi</h5>
+        <p class="bg-white"><%=products.description%></p>
       </div>
     </div>
   </div>
+  <!--/category-tab-->
+
+
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-3">
+        <div class="left-sidebar">
+          <!-- &nbsp;
+          <div>
+            <a href="/products/delete/<%=products.id %>" class="btn btn-danger">Delete Product</a>
+            &nbsp;
+            <a href="/products/edit/<%=products.id %>" class="btn btn-info">Edit</a>
+
+          </div> -->
+          &nbsp;
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="category-tab shop-details-tab">
+    <!--category-tab-->
+    <div class="col-sm-12">
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="" data-toggle="tab">Reviews (5)</a></li>
+      </ul>
+    </div>
+    <div class="tab-content">
+      <div class="tab-pane fade active in" id="reviews">
+        <div class="col-sm-12">
+          <%reviews.forEach(function(element) {%>
+          <div>
+            <ul>
+              <li><a href=""><i class="fa fa-user"></i>UserName</a></li>
+              <li><a href=""><i class="fa fa-clock-o"></i><%= element.createdAt.toString().substring(0, 24) %></a></li>
+            </ul>
+            <p>nilai : <%=element.score%>/5 </p>
+            <p><%=element.comment%></p>
+          </div>
+          <%} );%>
+
+          <% if(session.username) { %>
+          <div class="container" style="background-color: #ffffff;">
+            <p><b>Kirim Ulasan</b></p>
+            <form method="POST" action="/products/addreviews">
+              <div class="mb-3">
+                <input type="hidden" name="id_product" id="id_product" value="<%= products.id %>">
+                <label for="nama" class="form-label">Skor</label>
+                <input type="number" class="form-control" name="score" id="score" placeholder="nilai ulasan 1-5">
+              </div>
+              <div class="mb-3">
+                <label for="comment" class="form-label">Isi Ulasan</label>
+                <input type="text" class="form-control" name="comment" required id="comment" placeholder="isi komentar">
+              </div>
+              <button type="submit" class="btn btn-primary">kirim Ulasan</button>
+              &nbsp;
+              &nbsp;
+            </form>
+          </div>
+          <% } %>
+
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <!--/category-tab-->
+
+
+</div>
+</div>
+</div>
 </section>
 <%- include('templates/footer') -%>
-

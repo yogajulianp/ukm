@@ -196,13 +196,14 @@ router.get("/add_ukm", function (req, res, next) {
   res.render("admin/ukm_add");
 });
 
-router.post("/add_ukm", function (req, res, next) {
-  Ukm.create({
+router.post("/edit_ukm", function (req, res, next) {
+  const id = parseInt(req.query.id);
+  Ukm.update({
     name: req.body.name,
     description: req.body.description,
     address: req.body.address,
-    userId: req.session.userId,
-  })
+  },
+    { where: { id: id } })
     .then(() => {
       res.redirect("ukm");
     })

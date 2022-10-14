@@ -5,7 +5,10 @@ const { order_detail, orders, products, sequelize } = require("../models");
 router.get("/", async function (req, res, next) {
   await DeleteOrderOnSpecificUser(3);
   let data = await getAllOrderDetailSpesificUser(3);
-  res.render("cart/cart", { data });
+  res.render("cart/cart", {
+    data,
+    session: req.session
+  });
 });
 
 router.get("/add", async function (req, res, next) {
