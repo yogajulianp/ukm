@@ -1,11 +1,18 @@
 var express = require("express");
 const auth = require("../auth");
 var router = express.Router();
-const { order_detail, orders, products, sequelize } = require("../models");
+const {
+  order_detail,
+  orders,
+  products,
+  sequelize,
+  users,
+} = require("../models");
 
 router.get("/", auth, async function (req, res, next) {
-  await DeleteOrderOnSpecificUser(3);
-  let data = await getAllOrderDetailSpesificUser(3);
+  const { id } = await findIDUserFromUsername(req.session.username);
+  await DeleteOrderOnSpecificUser(id);
+  let data = await getAllOrderDetailSpesificUser(id);
   data = data.map((element) => {
     let tempPrice = element["product.price"] * element.quantity;
     return {
@@ -25,21 +32,23 @@ router.get("/", auth, async function (req, res, next) {
 });
 
 router.get("/add", async function (req, res, next) {
+  const { id } = await findIDUserFromUsername(req.session.username);
   const { productId } = req.query;
-  const data = SetOrderDetailFromSpecificUser(3, productId);
+  const data = SetOrderDetailFromSpecificUser(id, productId);
 
   res.redirect("back");
 });
 
 router.post("/", async function (req, res, next) {
-  let data = await getAllDataForOrders(3);
+  const { id } = await findIDUserFromUsername(req.session.username);
+  let data = await getAllDataForOrders(id);
   var result = data.map((person) => ({
     user_fk: person.user_fk,
     ukm_fk: person["product.ukm_fk"],
     total_price: person.total_price,
     delivery_price: 3000,
   }));
-  await DeleteOrderOnSpecificUser(3);
+  await DeleteOrderOnSpecificUser(id);
 
   const res2 = await SetOrderFromListOrderDetail(result);
 
@@ -48,7 +57,7 @@ router.post("/", async function (req, res, next) {
     ukm_id: element.ukm_fk,
   }));
 
-  await setAllOrderDetailOnSpesificOrder(3, element);
+  await setAllOrderDetailOnSpesificOrder(id, element);
 
   res.redirect("/checkout");
 });
@@ -126,7 +135,7 @@ async function setAllOrderDetailOnSpesificOrder(user_fk, data) {
   try {
     const [results, metadata] = await sequelize.query(
       `UPDATE order_details SET orders_fk = CASE ${caseQuery} FROM order_details  INNER JOIN products AS p ON products_fk = p.id
-    WHERE user_fk = 3 AND orders_fk IS NULL AND delete_at IS NULL;`,
+    WHERE user_fk = ? AND orders_fk IS NULL AND delete_at IS NULL;`,
       { replacements: [user_fk] }
     );
   } catch (error) {
@@ -171,6 +180,13 @@ async function DeleteOrderOnSpecificUser(idUser) {
     where: { user_fk: idUser, transaction_fk: null },
   });
   return res;
+}
+
+async function findIDUserFromUsername(username) {
+  return await users.findOne({
+    where: { username: username },
+    attributes: ["id"],
+  });
 }
 
 module.exports = router;

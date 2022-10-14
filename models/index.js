@@ -45,6 +45,7 @@ db.category.hasMany(db.products, { foreignKey: "category_fk" });
 
 db.orders.hasMany(db.order_detail, { foreignKey: "orders_fk" });
 db.orders.belongsTo(db.ukms, { foreignKey: "ukm_fk" });
+db.orders.belongsTo(db.transaction, { foreignKey: "transaction_fk" });
 
 db.users.hasMany(db.orders, {
   foreignKey: "user_fk",

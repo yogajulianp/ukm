@@ -17,12 +17,12 @@
         
         
   <td class="cart_product">
-    <a href=""><img src="images/cart/one.png" alt="" /></a>
+    <a href=""><img src="<%= orderDetail[i]['product.image']%>" alt="" /></a>
   </td>
 
   <td class="cart_description" >
     <h4><a href=""><%= orderDetail[i]["product.name"]%></a></h4>
-    <p>Web ID: 1089772</p>
+    
 
   </td>
   <td class="cart_price" >
@@ -45,7 +45,7 @@
 <tr>
   
   <td class="cart_quantity" colspan="5" style="text-align:right ;">
-    <p class="cart_price">Shipping Cost : <%=data%></p>
+    <p class="cart_price">Shipping Cost : <%=data.delivery_price%></p>
   </td>
   </tr>
   <tr>
