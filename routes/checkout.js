@@ -81,7 +81,7 @@ router.post("/pay", auth, async function (req, res, next) {
     const { id } = await SetTransaction(paymentInt);
     await UpdateOrderFromTransaction(id, listOrderId);
     await DecreasingProductQuantityFromOrder(listOrderId);
-    res.redirect("/");
+    res.redirect("/transaction");
   } catch (error) {
     res.send({ message: "ERROR TRANSACTION " + error });
   }

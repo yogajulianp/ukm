@@ -15,9 +15,74 @@
         </thead> -->
         <tbody>
      
-          <% for(var i = 0; i < data.length; i++) { %> <%-
-          include('checkout_item', {data:data[i]})-%> <% } %>
-    
+          
+          <% for(var i = 0; i < data.length; i++) { %>
+            
+            <tr>
+              <tr class="cart_menu">
+                <td colspan="6" style="text-align: center;" class="image"><%=data["ukm.name"]%></td>
+              </tr>
+            <tr class="cart_menu">
+                <td class="image">Image</td>
+                <td class="description">Name</td>
+                <td class="price">Price</td>
+                <td class="quantity">Quantity</td>
+                <td class="total">Total</td>
+                
+                <td></td>
+              </tr>
+                <% for(var i = 0; i < orderDetail.length; i++) { %> 
+                  
+                  <% if (orderDetail[i]["product.ukm_fk"] == data["ukm_fk"]) {%>
+                    
+                    
+              <td class="cart_product">
+                <a href=""><img src="<%= orderDetail[i]['product.image']%>" alt="" /></a>
+              </td>
+            
+              <td class="cart_description" >
+                <h4><a href=""><%= orderDetail[i]["product.name"]%></a></h4>
+                
+            
+              </td>
+              <td class="cart_price" >
+                <p><%= orderDetail[i]["product.price"]%></p>
+              </td>
+              
+              <td class="cart_quantity">
+                <p><%= orderDetail[i].quantity%></p>
+              </td>
+              <td class="cart_total" >
+                <p class="cart_total_price"><%= orderDetail[i]["product.price_total"]%></p>
+              </td>
+            
+              
+              
+            </tr>
+            <% }%>
+            
+            <% } %>
+            <tr>
+              
+              <td class="cart_quantity" colspan="5" style="text-align:right ;">
+                <p class="cart_price">Shipping Cost : <%=data.delivery_price%></p>
+              </td>
+              </tr>
+              <tr>
+              
+                <td class="cart_quantity" colspan="5" style="text-align:right ;">
+                  <p class="cart_total_price">Total : <%=data.total_price%></p>
+                </td>
+                </tr>
+            
+          <!-- <%-
+          include('checkout_item', {data:data[i]})-%>
+          --> 
+
+          <% } %>
+          
+
+
             <td colspan="3">&nbsp;</td>
             <td colspan="2" >
               <table class="table table-condensed total-result">
@@ -40,7 +105,7 @@
                       <form action="/checkout/pay" method="post">
                       <a class="btn btn-default update" href="/cart">Cancel</a>
                         <input type="text" value="<%= TotalPriceRaw+total_delivery_price%>" name="payment" id="payment" hidden>
-                        <input type="submit"  class="btn btn-default check_out" value="OK" >
+                        <input href="/transaction" type="submit"  class="btn btn-default check_out" value="OK" >
                     </form>
                     </td>
                   </tr>
