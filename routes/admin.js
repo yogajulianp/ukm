@@ -192,12 +192,30 @@ router.get("/ukm", function (req, res, next) {
     });
 });
 
-router.get("/add_ukm", function (req, res, next) {
-  res.render("admin/ukm_add");
+router.get("/edit_ukm/:id", function (req, res, next) {
+  const id = parseInt(req.params.id);
+  Ukm.findByPk(id)
+    .then(detailukm => {
+      if (detailukm) {
+        res.render('admin/ukm_edit', {
+          pageTitle: 'Edit UKM',
+          id: detailukm.id,
+          name: detailukm.name,
+          address: detailukm.address,
+          description: detailukm.description,
+        });
+      } else {
+        // http 404 not found
+        res.redirect('/admin/ukm');
+      }
+    })
+    .catch(err => {
+      res.redirect('/admin/ukm');
+    });
 });
 
 router.post("/edit_ukm", function (req, res, next) {
-  const id = parseInt(req.query.id);
+  const id = parseInt(req.params.id);
   Ukm.update({
     name: req.body.name,
     description: req.body.description,

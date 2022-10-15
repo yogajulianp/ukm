@@ -5,21 +5,21 @@
 
 	<div class="category-tab">
 		<!--category-tab-->
-		
+
 		<div class="col-sm-12">
 			<ul class="nav nav-tabs">
 				<% categories.forEach(function(elemen) {%>
-				<li ><a href="<%=elemen.id%>" data-toggle="tab"><%=elemen.category%></a></li>
-				<% }); %> 
+				<li><a href="<%=elemen.id%>" data-toggle="tab"><%=elemen.category%></a></li>
+				<% }); %>
 			</ul>
 		</div>
-	
-		
+
+
 
 		<div class="tab-content">
 			<%categories.forEach(function(elemen) {%>
 			<div class="tab-pane fade active in" id="<%=elemen.id%>">
-			<%} );%> 
+				<%} );%>
 				<%products.forEach(function(item) {%>
 				<div class="col-sm-3">
 					<div class="product-image-wrapper">
@@ -30,7 +30,7 @@
 								</a>
 								<h2>Rp <%=item.price%></h2>
 								<p><a href="/products/detail/<%=item.id%>" class="card-title"><%=item.name%></a></p>
-								<p>Kategori : <%=item.category.category%> </p>
+
 								<a href="/products/detail/<%=item.id%> " class="btn btn-default add-to-cart"><i
 										class="fa fa-shopping-cart"></i>Lihat selengkapnya</a>
 							</div>
@@ -41,9 +41,9 @@
 				<%} );%>
 
 			</div>
-			
 
-		
+
+
 
 		</div>
 	</div>

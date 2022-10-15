@@ -27,7 +27,8 @@
                     <p>Nama UKM = <%= data.name %></p>
                     <p>Deskripsi = <%= data.description %>.</p>
                     <p>Alamat = <%= data.address %></p>
-                    <a href="edit_ukm?id=data.id" class="btn btn-primary "><i class="fas fa-edit fa-sm ">Edit</i></a>
+                    <a href="edit_ukm/<%= data.id %>" class="btn btn-primary "><i
+                            class="fas fa-edit fa-sm ">Edit</i></a>
                 </p>
                 <% } %>
             </div>
