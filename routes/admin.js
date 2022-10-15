@@ -189,8 +189,9 @@ router.post("/add_products", function (req, res, next) {
 
 
 //edit product, data di ambil
-router.get("/edit_products/:id", async function (req, res, next) {
-  const id = parseInt(req.params.id);
+router.get("/edit_products", async function (req, res, next) {
+ // const id = parseInt(req.params.id);
+  const id = parseInt(req.query.id)
   let viewsData = {
     pageTitle: "Edit product",
     path: `admin/edit_products/${id}`,
@@ -218,8 +219,10 @@ router.get("/edit_products/:id", async function (req, res, next) {
 });
 
 //Edit products akan di Post
-router.post("/edit_products/:id", async function (req, res, next) {
-  const id = parseInt(req.params.id);
+router.post("/edit_products", async function (req, res, next) {
+  //const id = parseInt(req.params.id);
+  const id = parseInt(req.query.id)
+
   let products = {
     name: req.body.name,
     image: req.file,
@@ -246,7 +249,7 @@ router.post("/edit_products/:id", async function (req, res, next) {
     //   errorMessage:
     //     "file yang dikirim harus disertai gambar, harus format png/jpeg/jpg",
     // });
-    return res.redirect(`/admin/edit_products/${id}`);
+    return res.redirect(`edit_products?id=${id}`);
   }
 
   var image = products.image.path;
