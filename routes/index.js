@@ -9,6 +9,7 @@ const Products = db.products;
 const Category = db.category;
 
 var bcrypt = require('bcryptjs');
+const { registerPaymentAccount } = require("../vendor/payment");
 
 /* GET home page. */
 //get all products
@@ -106,7 +107,8 @@ router.post('/register', function (req, res, next) {
     lon: req.body.lon
   }
   User.create(user)
-    .then(data => {
+    .then(async data => {
+      await registerPaymentAccount(req.body.fullname,req.body.email,req.body.username,req.body.password)
       res.redirect('/login');
     })
     .catch(err => {
