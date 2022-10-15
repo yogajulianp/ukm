@@ -1,0 +1,29 @@
+<tr>
+  <td class="cart_product">
+    <h3><%=data.transaction_fk %></h3>
+  </td>
+  <td class="cart_description">
+    <h4><a href=""><%=data.total_payment %> </a></h4>
+  </td>
+  <td class="cart_price">
+    <p><%=data.status%></p>
+  </td>
+
+  <td class="cart_total">
+    <% if (data.status=="not paid"){%>
+    <a
+      class="btn btn-primary check_out"
+      href="/transaction/pay/<%=data.transaction_fk%> "
+      >Pay
+    </a>
+    <% }else{%>
+    <button
+      class="btn btn-primary check_out"
+      href="/cart/delete/<%=data.id%> "
+      disabled
+    >
+      Pay
+    </button>
+    <% }%>
+  </td>
+</tr>

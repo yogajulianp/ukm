@@ -13,12 +13,13 @@ const {
   check,
   validationResult
 } = require('express-validator');
+const session = require("express-session");
 
 //get all products
 router.get("/", async function (req, res, next) {
   const categoryList = await Category.findAll();
   await Products.findAll({
-    include : Category,
+       include : Category,
     order: [
       ['createdAt', 'DESC']
     ]
@@ -78,6 +79,9 @@ router.get("/", async function (req, res, next) {
 //detail by params
 router.get("/detail/:id", async function (req, res, next) {
   const id = parseInt(req.params.id);
+  if (session.username) {
+    let username = req.body.username
+  }
   const categoryList = await Category.findAll();
   const isiReviews = await Reviews.findAll({
     where: {
@@ -233,7 +237,7 @@ router.post("/add", function (req, res, next) {
 router.get("/edit/:id", function (req, res, next) {
   const id = parseInt(req.params.id);
   let viewsData = {
-    pageTitle: "Tambah product",
+    pageTitle: "Edit product",
     path: `products/edit/${id}`,
     editing: true,
     hasError: false,

@@ -68,26 +68,63 @@ router.post("/regisukm", function (req, res, next) {
 
 // UKM Page
 // My Products
-router.get("/products", function (req, res, next) {
-  Products.findAll()
+// router.get("/products", function (req, res, next) {
+//   Products.findAll()
+//     .then((data) => {
+//       res.render("admin/products", {
+//         pageTitle: "Daftar product Saat ini",
+//         products: data,
+//       });
+//     })
+//     .catch((err) => {
+//       res.render("admin/products", {
+//         pageTitle: err,
+//         products: [],
+//       });
+//     });
+// });
+
+router.get("/products", async function (req, res, next) {
+  const categoryList = await Categories.findAll();
+  await Products.findAll({
+    include: Categories,
+    order: [
+      ['createdAt', 'DESC']
+    ]
+  })
     .then((data) => {
+      console.log(data)
       res.render("admin/products", {
         pageTitle: "Daftar product Saat ini",
         products: data,
+        categories: categoryList,
       });
     })
     .catch((err) => {
       res.render("admin/products", {
-        pageTitle: err,
+        pagetitle: "Daftar product Saat ini",
         products: [],
       });
     });
 });
 
 router.get("/add_products", function (req, res, next) {
-  res.render("admin/products_add");
+  //res.render("admin/products_add");
+  Categories.findAll({ attributes: ["id", "category"] }).then((categories) => {
+    //console.log(categories)
+    res.render("admin/products_add", {
+      pageTitle: "Tambah product",
+      path: "/admin/add_products",
+      editing: false,
+      hasError: false,
+      errorMessage: null,
+      session: req.session,
+      categories,
+    });
+  });
 });
 
+//add product
 router.post("/add_products", function (req, res, next) {
   let products = {
     name: req.body.name,
@@ -99,24 +136,34 @@ router.post("/add_products", function (req, res, next) {
     category_fk: req.body.category_fk,
   };
 
-  if (!products.image) {
-    return res.status(422).render("addProducts", {
-      pageTitle: "Tambah product",
-      //path: 'products/add',
-      editing: false,
-      hasError: true,
-      products: {
-        name: req.body.name,
-        description: req.body.description,
-        quantity: req.body.quantity,
-        price: req.body.price,
-      },
-      errorMessage:
-        "file yang dikirim harus disertai gambar, harus format png/jpeg/jpg",
-    });
+  if (!products.image || !products.quantity || !products.image || !products.description || !products.price || !products.name) {
+    Categories.findAll({ attributes: ["id", "category"] })
+      .then((categories) => {
+        console.log(categories)
+        return res.status(422).render("admin/products_add", {
+          pageTitle: "Tambah product",
+          path: "/admin/add_products",
+          editing: false,
+          hasError: true,
+          session: req.session,
+          categories,
+          products: {
+            name: req.body.name,
+            description: req.body.description,
+            quantity: req.body.quantity,
+            price: req.body.price,
+          },
+          errorMessage:
+            "file yang dikirim harus disertai gambar, harus format png/jpeg/jpg",
+        });
+      });
+    return res.redirect("/admin/add_products");
   }
+
   var image = products.image.path;
   var image2 = image.replace(/\\/g, "/");
+
+  //var rating2 =
 
   products = {
     name: req.body.name,
@@ -128,8 +175,8 @@ router.post("/add_products", function (req, res, next) {
     category_fk: req.body.category_fk,
   };
   Products.create(products)
-    .then(() => {
-      res.redirect("products");
+    .then((addData) => {
+      res.redirect("/admin/products");
     })
     .catch((err) => {
       res.json({
@@ -139,6 +186,99 @@ router.post("/add_products", function (req, res, next) {
     });
 });
 
+
+
+//edit product, data di ambil
+router.get("/edit_products", async function (req, res, next) {
+  // const id = parseInt(req.params.id);
+  const id = parseInt(req.query.id)
+  let viewsData = {
+    pageTitle: "Edit product",
+    path: `admin/edit_products/${id}`,
+    editing: true,
+    hasError: false,
+    errorMessage: null,
+    session: req.session,
+  };
+
+  await Products.findByPk(id)
+    .then((products) => {
+      viewsData = { ...{ products }, ...viewsData };
+      return Categories.findAll({ attributes: ["id", "category"] });
+    })
+    .then((categories) => {
+      viewsData = { ...{ categories }, ...viewsData };
+      res.render("admin/products_edit", viewsData);
+    })
+    .catch((err) => {
+      res.json({
+        info: "Error",
+        message: err.message,
+      });
+    });
+});
+
+//Edit products akan di Post
+router.post("/edit_products", async function (req, res, next) {
+  //const id = parseInt(req.params.id);
+  const id = parseInt(req.query.id)
+
+  let products = {
+    name: req.body.name,
+    image: req.file,
+    description: req.body.description,
+    quantity: req.body.quantity,
+    price: req.body.price,
+    rating: null,
+    category_fk: req.body.category_fk,
+  };
+
+  if (!products.image || !products.quantity || !products.image || !products.description || !products.price || !products.name) {
+    // return res.status(422).render("editProduct", {
+    //   pageTitle: "Edit product",
+    //   path: `products/edit/${id}`,
+    //   editing: true,
+    //   hasError: true,
+    //   session: req.session,
+    //   products: {
+    //     name: req.body.name,
+    //     description: req.body.description,
+    //     quantity: req.body.quantity,
+    //     price: req.body.price,
+    //   },
+    //   errorMessage:
+    //     "file yang dikirim harus disertai gambar, harus format png/jpeg/jpg",
+    // });
+    return res.redirect(`edit_products?id=${id}`);
+  }
+
+  var image = products.image.path;
+  var image2 = image.replace(/\\/g, "/");
+  products = {
+    name: req.body.name,
+    image: image2,
+    description: req.body.description,
+    quantity: req.body.quantity,
+    rating: null,
+    price: req.body.price,
+    category_fk: req.body.category_fk,
+  };
+
+  await Products.update(products, {
+    where: { id: id },
+  })
+    .then((num) => {
+      res.redirect("/admin/products");
+    })
+    .catch((err) => {
+      res.json({
+        info: "Error",
+        message: err.message,
+      });
+    });
+});
+
+
 router.get("/delete_products", function (req, res, next) {
   const id = parseInt(req.query.id);
 
@@ -147,7 +287,7 @@ router.get("/delete_products", function (req, res, next) {
   })
     .then((datadetail) => {
       if (datadetail) {
-        res.redirect("/");
+        res.redirect("/admin/products");
       } else {
         // http 404 not found
         res.status(404).send({
@@ -214,7 +354,7 @@ router.get("/edit_ukm/:id", function (req, res, next) {
     });
 });
 
-router.post("/edit_ukm", function (req, res, next) {
+router.post("/edit_ukm/:id", function (req, res, next) {
   const id = parseInt(req.params.id);
   Ukm.update({
     name: req.body.name,

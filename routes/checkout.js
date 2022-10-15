@@ -8,17 +8,22 @@ const {
   sequelize,
   ukms,
   transaction,
+  users,
 } = require("../models");
 
 router.get("/", auth, async function (req, res, next) {
-  let listOrder = await GetOrderFromSpecificUser(3);
+  const { id } = await findIDUserFromUsername(req.session.username);
+  let listOrder = await GetOrderFromSpecificUser(id);
   let TotalPriceRaw = 0;
   let allIdOrder = [];
+  let total_delivery_price = 0;
   listOrder = listOrder.map((element) => {
     TotalPriceRaw += element.total_price;
+    total_delivery_price += element.delivery_price;
     allIdOrder.push(element.id);
     return {
       ...element,
+
       total_price: new Intl.NumberFormat("id-ID", {
         style: "currency",
         currency: "IDR",
@@ -47,33 +52,35 @@ router.get("/", auth, async function (req, res, next) {
   let TotalPrice = new Intl.NumberFormat("id-ID", {
     style: "currency",
     currency: "IDR",
+  }).format(TotalPriceRaw + total_delivery_price);
+  let TotalCartPrice = new Intl.NumberFormat("id-ID", {
+    style: "currency",
+    currency: "IDR",
   }).format(TotalPriceRaw);
   res.render("cart/checkout/", {
     data: listOrder,
     TotalPrice,
     TotalPriceRaw,
+    TotalCartPrice,
+    total_delivery_price,
     orderDetail: allOrderDetailProduct,
     session: req.session,
   });
 });
 
-router.get("/delete/:id", async function (req, res, next) {
-  const { id } = req.params;
-  let data = await DeleteOrderDetail(id);
-  res.redirect("/cart");
-});
-
-router.post("/pay", async function (req, res, next) {
+router.post("/pay", auth, async function (req, res, next) {
   try {
+    const userId = await findIDUserFromUsername(req.session.username);
     const { payment } = req.body;
     let paymentInt = parseInt(payment);
-    listOrder = await GetOrderFromSpecificUser(3);
+    listOrder = await GetOrderFromSpecificUser(userId.id);
     let listOrderId = [];
     listOrder.forEach((element) => {
       listOrderId.push(element.id);
     });
     const { id } = await SetTransaction(paymentInt);
     await UpdateOrderFromTransaction(id, listOrderId);
+    await DecreasingProductQuantityFromOrder(listOrderId);
     res.redirect("/");
   } catch (error) {
     res.send({ message: "ERROR TRANSACTION " + error });
@@ -128,6 +135,31 @@ async function UpdateOrderFromTransaction(transactionid, listOrder) {
       raw: true,
     }
   );
+}
+
+function configCaseQueryProducts(data) {
+  let tempString = "";
+
+  data.forEach((element) => {
+    tempString += ` WHEN p.orders_fk=${element} THEN (pro.quantity - p.quantity)`;
+  });
+
+  tempString += " END";
+  return tempString;
+}
+async function DecreasingProductQuantityFromOrder(listOrderId) {
+  let caseQuery = configCaseQueryProducts(listOrderId);
+  await sequelize.query(
+    `UPDATE products SET quantity = CASE ${caseQuery} FROM products AS pro RIGHT JOIN order_details AS p ON p.products_fk = pro.id WHERE p.orders_fk IN (?) AND p.delete_at IS NULL;`,
+    { replacements: [listOrderId] }
+  );
+}
+
+async function findIDUserFromUsername(username) {
+  return await users.findOne({
+    where: { username: username },
+    attributes: ["id"],
+  });
 }
 
 module.exports = router;

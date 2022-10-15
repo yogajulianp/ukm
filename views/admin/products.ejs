@@ -22,20 +22,25 @@
                                     <th>No</th>
                                     <th>Nama Produk</th>
                                     <th>Foto</th>
+                                    <th>Kategori</th>
                                     <th>Deskripsi</th>
                                     <th>Stok</th>
                                     <th>Harga</th>
+                                    <th>Detail</th>
                                     <th></th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <%products.forEach(function(item) {%>
                                     <tr>
-                                        <td>1.</td>
+                                        <td><%= item.id %></td>
                                         <td>
                                             <%= item.name %>
                                         </td>
                                         <td><img src="/<%= item.image %>" width="250px" alt="s"></td>
+                                        <td>
+                                            <%=item.category.category%>
+                                        </td>
                                         <td>
                                             <%= item.description %>
                                         </td>
@@ -46,7 +51,11 @@
                                             Rp.<%= item.price %>
                                         </td>
                                         <td>
-                                            <a href="edit_products" class="btn btn-primary"><i
+                                            <a href="/products/detail/<%=item.id%>" class="btn btn-info">Detail</a>
+                                        </td>
+                                       
+                                        <td>
+                                            <a href="/admin/edit_products?id=<%=item.id %>" class="btn btn-primary"><i
                                                     class="fas fa-edit fa-sm fa-fw"></i></a>
                                             <a href="delete_products?id=<%= item.id %>" class="btn btn-danger"><i
                                                     class="fas fa-trash fa-sm fa-fw"></i></a>

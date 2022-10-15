@@ -9,9 +9,9 @@ const Products = db.products;
 const Category = db.category;
 
 var bcrypt = require('bcryptjs');
+const { registerPaymentAccount } = require("../vendor/payment");
 
 /* GET home page. */
-//get all products
 //get all products
 router.get("/", async function (req, res, next) {
   const categoryList = await Category.findAll();
@@ -106,7 +106,8 @@ router.post('/register', function (req, res, next) {
     lon: req.body.lon
   }
   User.create(user)
-    .then(data => {
+    .then(async data => {
+      await registerPaymentAccount(req.body.fullname,req.body.email,req.body.username,req.body.password)
       res.redirect('/login');
     })
     .catch(err => {

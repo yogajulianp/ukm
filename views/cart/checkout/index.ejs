@@ -24,12 +24,12 @@
                 <tbody>
                   <tr>
                     <td>Cart Sub Total</td>
-                    <td><%=TotalPrice%></td>
+                    <td><%=TotalCartPrice%></td>
                   </tr>
                  
                   <tr class="shipping-cost">
                     <td>Shipping Cost</td>
-                    <td>Free</td>
+                    <td>Rp.<%= total_delivery_price%></td>
                   </tr>
                   <tr>
                     <td>Total</td>
@@ -37,10 +37,10 @@
                   </tr>
                   <tr>
                     <td>
-                      <a class="btn btn-default update" href="/cart">Cancel</a>
                       <form action="/checkout/pay" method="post">
-                        <input type="text" value="<%= TotalPriceRaw%>" name="payment" id="payment" hidden>
-                        <input type="submit"  class="btn btn-default check_out" value="Pay Now" >
+                      <a class="btn btn-default update" href="/cart">Cancel</a>
+                        <input type="text" value="<%= TotalPriceRaw+total_delivery_price%>" name="payment" id="payment" hidden>
+                        <input type="submit"  class="btn btn-default check_out" value="OK" >
                     </form>
                     </td>
                   </tr>
